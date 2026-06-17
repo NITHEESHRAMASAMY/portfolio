@@ -1,0 +1,122 @@
+import { motion } from "framer-motion";
+
+export default function About() {
+  const stories = [
+    {
+      num: "01",
+      title: "Introduction",
+      text: "I am a Final Year B.E. Computer Science & Engineering student with a deep interest in software engineering. I design and build highly functional, performant backend architectures and interactive user interfaces.",
+    },
+    {
+      num: "02",
+      title: "Career Goals",
+      text: "My goal is to join an elite engineering group where I can build complex backend services, optimize database queries, and contribute to cutting-edge web applications.",
+    },
+    {
+      num: "03",
+      title: "Passion",
+      text: "I am passionate about bridging the gap between logic and design. I love optimizing complex algorithms in Java and crafting micro-interactions that make interfaces feel alive and fluid.",
+    },
+    {
+      num: "04",
+      title: "Current Focus",
+      text: "Currently diving deep into enterprise Java development, distributed caching mechanisms, and performance-tuned React rendering architectures.",
+    },
+  ];
+
+  return (
+    <section
+      id="about"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
+        {/* Left Column: Heading and Portrait */}
+        <div className="lg:col-span-5 flex flex-col gap-8 sticky top-28">
+          <div className="flex flex-col gap-2">
+            <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
+              [ WHO AM I ]
+            </span>
+            <h2 className="text-5xl md:text-7xl font-display font-semibold tracking-tight text-white uppercase leading-none">
+              WHO AM I?
+            </h2>
+          </div>
+
+          {/* Premium Image Frame with Hover Zoom & Scroll Reveal */}
+          <motion.div
+            initial={{ clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", opacity: 0 }}
+            whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full aspect-[4/5] max-w-[360px] md:max-w-full rounded bg-neutral-900 border border-neutral-800 overflow-hidden group"
+          >
+            <motion.img
+              src="/profile.png"
+              alt="Nitheesh"
+              className="w-full h-full object-cover filter grayscale contrast-125 brightness-95 group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+            {/* Dark glass overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+            <div className="absolute bottom-4 left-4 font-mono text-[9px] text-white/50 tracking-widest uppercase">
+              Nitheesh // Dev Profile Portrait
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Column: Story items */}
+        <div className="lg:col-span-7 flex flex-col gap-6 md:gap-10">
+          <div className="flex flex-col gap-8">
+            {stories.map((story, index) => (
+              <motion.div
+                key={story.title}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{
+                  duration: 0.8,
+                  delay: index * 0.1,
+                  ease: [0.16, 1, 0.3, 1], // easeOutExpo
+                }}
+                className="group border border-neutral-900 hover:border-neutral-800 rounded-lg p-6 md:p-8 bg-neutral-950/40 hover:bg-neutral-950/70 transition-all duration-300 flex flex-col md:flex-row gap-6 items-start"
+              >
+                {/* Horizontal slide elements */}
+                <div className="font-mono text-sm text-neutral-600 tracking-wider">
+                  {story.num}
+                </div>
+                <div className="flex flex-col gap-2 flex-1">
+                  <h3 className="text-white font-display font-medium text-xl md:text-2xl group-hover:text-neutral-200 transition-colors">
+                    {story.title}
+                  </h3>
+                  <p className="text-neutral-400 font-sans font-light text-sm md:text-base leading-relaxed">
+                    {story.text}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Tagline Graphic Block */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="border-t border-neutral-900 pt-12 mt-8"
+          >
+            <h4 className="text-2xl md:text-4xl font-display font-light text-neutral-300 italic tracking-tight leading-snug">
+              "Transforming Ideas Into Digital Experiences."
+            </h4>
+            <p className="font-mono text-[9px] text-neutral-500 tracking-[0.25em] uppercase mt-4">
+              // Nitheesh Design Creed
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Footer copyright anchor */}
+      <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
+        <span>ABOUT // STORY LAB</span>
+        <span>026 // © NITHEESH R</span>
+      </div>
+    </section>
+  );
+}
