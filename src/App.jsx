@@ -3,7 +3,6 @@ import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 
 import Loader from "./components/Loader";
-import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 
@@ -117,9 +116,6 @@ export default function App() {
 
       {!loading && (
         <main className="relative bg-black min-h-screen text-white select-none overflow-x-hidden">
-          {/* Custom Cursor Overlay */}
-          <CustomCursor />
-
           {/* Background Ambient Layers */}
           <div className="noise-overlay" />
           <div className="beam-light-1" />
