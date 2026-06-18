@@ -117,16 +117,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Inner Dot (follows mouse coordinates directly) */}
-      <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
       {/* Outer Ring (snaps to element center or follows cursor via spring physics) */}
       <motion.div
         className="fixed top-0 left-0 border border-white/60 pointer-events-none z-[9998] mix-blend-difference hidden md:block"

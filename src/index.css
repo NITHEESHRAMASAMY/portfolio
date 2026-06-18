@@ -68,16 +68,6 @@ html, body {
   padding: 0;
 }
 
-/* Hide cursor on desktops for the custom cursor effect */
-@media (pointer: fine) {
-  html, body {
-    cursor: none;
-  }
-  a, button, select, input, textarea, [role="button"], iframe {
-    cursor: none !important;
-  }
-}
-
 /* High-end typography details */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Clash Display', sans-serif;
