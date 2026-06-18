@@ -51,19 +51,19 @@ export default function GithubDashboard() {
     { name: "React / HTML / CSS", pct: 15 },
     { name: "Go", pct: 10 },
   ]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   // Fetch from GitHub API on mount
   useEffect(() => {
     const fetchGithubData = async () => {
       try {
         // Fetch user info
-        const userRes = await fetch("https://api.github.com/users/nitheesh");
+        const userRes = await fetch("https://api.github.com/users/NITHEESHRAMASAMY");
         if (!userRes.ok) throw new Error("API Limit or offline");
         const userData = await userRes.json();
         
         // Fetch repositories languages estimate
-        const reposRes = await fetch("https://api.github.com/users/nitheesh/repos?per_page=50");
+        const reposRes = await fetch("https://api.github.com/users/NITHEESHRAMASAMY/repos?per_page=50");
         let reposCount = userData.public_repos || 28;
         let commitsEst = reposCount * 22 + 120; // Estimating commits based on repos
         
@@ -96,7 +96,7 @@ export default function GithubDashboard() {
         });
       } catch (err) {
         // If rate limited, keep fallback values
-        console.warn("Using fallback GitHub dashboard statistics due to API throttling or offline status.");
+        console.warn("Using fallback GitHub dashboard statistics due to API throttling or offline status.", err);
       } finally {
         setLoading(false);
       }

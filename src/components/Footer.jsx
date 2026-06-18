@@ -2,10 +2,10 @@ import { ArrowUp } from "lucide-react";
 
 export default function Footer() {
   const socialLinks = [
-    { name: "GITHUB", href: "https://github.com" },
-    { name: "LINKEDIN", href: "https://linkedin.com" },
-    { name: "EMAIL", href: "mailto:nitheesh.developer@example.com" },
-    { name: "RESUME", href: "#/resume" },
+    { name: "GITHUB", href: "https://github.com/NITHEESHRAMASAMY" },
+    { name: "LINKEDIN", href: "https://www.linkedin.com/in/nitheesh-r-163b93411" },
+    { name: "EMAIL", href: "mailto:nitheesh25blsl@gmail.com" },
+    { name: "RESUME", href: "/resume.pdf" },
   ];
 
   const quickLinks = [
@@ -33,10 +33,10 @@ export default function Footer() {
         {/* Left Side: Large brand representation */}
         <div className="md:col-span-6 flex flex-col gap-4">
           <h3 className="text-5xl md:text-7xl font-display font-bold text-white tracking-tight uppercase leading-none">
-            NITHEESH
+            NITHEESH R
           </h3>
           <p className="font-mono text-xs text-neutral-500 tracking-[0.25em] uppercase">
-            Full Stack Developer // Java Developer
+            Full Stack & AI Developer // CSE Student
           </p>
           <span className="text-neutral-600 text-xs font-sans font-light max-w-sm mt-2">
             Engineering solid backends, responsive interfaces, and interactive systems.
@@ -86,7 +86,7 @@ export default function Footer() {
               <a
                 key={soc.name}
                 href={soc.href}
-                target={soc.href.startsWith("http") ? "_blank" : "_self"}
+                target={soc.href.startsWith("http") || soc.href.endsWith(".pdf") ? "_blank" : "_self"}
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors duration-300"
               >

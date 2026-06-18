@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle, Loader } from "lucide-react";
 
@@ -88,14 +88,14 @@ export default function Contact() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1.5 border-l border-neutral-900 pl-6">
               <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest">Email Address</span>
-              <a href="mailto:nitheesh.developer@example.com" className="text-white hover:text-neutral-400 transition-colors text-lg font-mono">
-                nitheesh.developer@example.com
+              <a href="mailto:nitheesh25blsl@gmail.com" className="text-white hover:text-neutral-400 transition-colors text-lg font-mono">
+                nitheesh25blsl@gmail.com
               </a>
             </div>
 
             <div className="flex flex-col gap-1.5 border-l border-neutral-900 pl-6">
               <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest">Current Location</span>
-              <span className="text-neutral-300 text-lg font-mono">Coimbatore, Tamil Nadu, India</span>
+              <span className="text-neutral-300 text-lg font-mono">Tiruppur, Tamil Nadu, India</span>
             </div>
           </div>
         </div>

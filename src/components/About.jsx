@@ -5,22 +5,22 @@ export default function About() {
     {
       num: "01",
       title: "Introduction",
-      text: "I am a Final Year B.E. Computer Science & Engineering student with a deep interest in software engineering. I design and build highly functional, performant backend architectures and interactive user interfaces.",
+      text: "I am a Computer Science & Engineering student at Dr. N.G.P. Institute of Technology, Coimbatore. I am committed to developing innovative and efficient software solutions, eager to apply my diverse technical skill set to enhance productivity and growth.",
     },
     {
       num: "02",
-      title: "Career Goals",
-      text: "My goal is to join an elite engineering group where I can build complex backend services, optimize database queries, and contribute to cutting-edge web applications.",
+      title: "Areas of Interest",
+      text: "My primary interests lie in Full Stack Development (MERN), Software Development & Application Design, Machine Learning, Computer Vision, and Data Structures & Algorithms.",
     },
     {
       num: "03",
-      title: "Passion",
-      text: "I am passionate about bridging the gap between logic and design. I love optimizing complex algorithms in Java and crafting micro-interactions that make interfaces feel alive and fluid.",
+      title: "Current Focus",
+      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. Experienced in Python, Java, MongoDB, and LLM-based orchestration.",
     },
     {
       num: "04",
-      title: "Current Focus",
-      text: "Currently diving deep into enterprise Java development, distributed caching mechanisms, and performance-tuned React rendering architectures.",
+      title: "Certifications",
+      text: "Certified in UI-UX Design by Maiyyam, NPTEL IoT & Cloud Computing, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
     },
   ];
 

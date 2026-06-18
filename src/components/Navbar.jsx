@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileText } from "lucide-react";
+import { Menu, X, FileText, Sun, Moon } from "lucide-react";
 
 // Inline brand icon SVGs to replace removed lucide-react brand icons
 const Github = ({ size = 16, className }) => (
@@ -53,6 +53,21 @@ export default function Navbar() {
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Local theme state & toggle logic
+  const [isLightTheme, setIsLightTheme] = useState(
+    () => document.documentElement.classList.contains("light")
+  );
+
+  const toggleTheme = () => {
+    const nextTheme = !isLightTheme;
+    setIsLightTheme(nextTheme);
+    if (nextTheme) {
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+    }
+  };
 
   // Scroll to Hide/Reveal Navbar
   useEffect(() => {
@@ -155,15 +170,25 @@ export default function Navbar() {
 
         {/* Right Side: Social Media / Action buttons */}
         <div className="hidden md:flex items-center gap-5 font-mono text-[10px] tracking-wider text-neutral-400">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1 border border-white/10 hover:border-white hover:text-white px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40 cursor-none"
+            title="Toggle theme"
+          >
+            {isLightTheme ? <Sun size={12} /> : <Moon size={12} />}
+            <span>{isLightTheme ? "LIGHT" : "DARK"}</span>
+          </button>
           <a
-            href="#/resume"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 border border-white/10 hover:border-white hover:text-white px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40"
           >
             <FileText size={12} />
             <span>RESUME</span>
           </a>
           <a
-            href="https://github.com"
+            href="https://github.com/NITHEESHRAMASAMY"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -172,7 +197,7 @@ export default function Navbar() {
             <Github size={16} />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/nitheesh-r-163b93411"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -184,8 +209,18 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle button */}
         <div className="lg:hidden flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1 border border-white/10 hover:border-white hover:text-white px-2.5 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40 font-mono text-[9px] tracking-wider text-neutral-300 cursor-none"
+            title="Toggle theme"
+          >
+            {isLightTheme ? <Sun size={10} /> : <Moon size={10} />}
+            <span>{isLightTheme ? "LIGHT" : "DARK"}</span>
+          </button>
           <a
-            href="#/resume"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1 border border-white/10 hover:border-white hover:text-white px-2.5 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40 font-mono text-[9px] tracking-wider text-neutral-300"
           >
             <FileText size={10} />
@@ -233,7 +268,7 @@ export default function Navbar() {
             {/* Mobile Socials */}
             <div className="flex justify-around items-center pt-2 font-mono text-xs text-neutral-400">
               <a
-                href="https://github.com"
+                href="https://github.com/NITHEESHRAMASAMY"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-white"
@@ -242,7 +277,7 @@ export default function Navbar() {
                 <span>GITHUB</span>
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/nitheesh-r-163b93411"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-white"

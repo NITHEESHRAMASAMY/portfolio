@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { ArrowUpRight } from "lucide-react";
 import HeroBackground from "./HeroBackground";
 
-const roles = ["FULL STACK DEVELOPER", "JAVA DEVELOPER", "PROBLEM SOLVER"];
+const roles = ["FULL STACK DEVELOPER", "JAVA & PYTHON DEVELOPER", "AI WORKFLOW ENGINEER"];
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -94,7 +94,7 @@ export default function Hero() {
             variants={itemVariants}
             className="font-mono text-xs md:text-sm tracking-[0.3em] text-neutral-500 uppercase"
           >
-            Final Year B.E. CSE Student
+            B.E. Computer Science & Engineering Student
           </motion.p>
         </div>
 
@@ -104,7 +104,7 @@ export default function Hero() {
             variants={itemVariants}
             className="text-7xl sm:text-8xl md:text-9xl font-display font-bold text-white tracking-tight uppercase leading-none"
           >
-            NITHEESH
+            NITHEESH <span className="ml-4 sm:ml-6 md:ml-8">R</span>
           </motion.h1>
         </div>
 
@@ -129,7 +129,7 @@ export default function Hero() {
           variants={subtitleVariants}
           className="text-neutral-400 text-sm md:text-xl font-light tracking-wide max-w-xl mb-12 font-sans"
         >
-          Building Digital Experiences Through Code & Creativity.
+          Code. Create. Innovate. Repeat.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -139,7 +139,9 @@ export default function Hero() {
         >
           {/* Download Resume Button (Contrast Fill) */}
           <a
-            href="#/resume"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group relative flex items-center gap-2 border border-white hover:bg-white hover:text-black px-8 py-4 rounded-full transition-all duration-300 overflow-hidden"
           >
             <span>DOWNLOAD RESUME</span>

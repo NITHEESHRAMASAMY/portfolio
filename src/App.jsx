@@ -17,50 +17,7 @@ const Footer = lazy(() => import("./components/Footer"));
 
 const SectionFallback = () => <div className="min-h-screen bg-black" />;
 
-// Sleek layout section helper
-function Section({ id, title, subtitle, children }) {
-  return (
-    <section
-      id={id}
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 flex flex-col justify-between bg-black relative"
-    >
-      {/* Structural layout grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
-        <div className="lg:col-span-4 flex flex-col gap-3">
-          <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
-            [ SECTION {id.toUpperCase()} ]
-          </span>
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight text-white uppercase">
-            {title}
-          </h2>
-        </div>
 
-        <div className="lg:col-span-8 flex flex-col gap-6">
-          <p className="text-neutral-400 font-light text-base md:text-xl max-w-2xl font-sans leading-relaxed">
-            {subtitle}
-          </p>
-          <div className="mt-8 text-neutral-500 font-mono text-sm tracking-wide">
-            {children || (
-              <div className="border border-neutral-900 rounded-lg p-8 bg-neutral-950/50 flex flex-col gap-4">
-                <p className="font-mono text-xs text-neutral-500 uppercase tracking-widest">
-                  // Content details block pending developer custom modules
-                </p>
-                <div className="h-2 w-32 bg-neutral-900 rounded" />
-                <div className="h-2 w-48 bg-neutral-900 rounded" />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Decorative Bottom Line */}
-      <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
-        <span>NITHEESH // CSE STUDENT PORTFOLIO</span>
-        <span>026 // © ALL RIGHTS RESERVED</span>
-      </div>
-    </section>
-  );
-}
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -88,7 +45,7 @@ export default function App() {
     // Anchor smooth scroll helper for local link clicks
     const handleAnchorClick = (e) => {
       const href = e.currentTarget.getAttribute("href");
-      if (href && href.startsWith("#")) {
+      if (href && href.startsWith("#") && !href.startsWith("#/")) {
         e.preventDefault();
         const targetEl = document.querySelector(href);
         if (targetEl) {
@@ -97,7 +54,7 @@ export default function App() {
       }
     };
 
-    const anchors = document.querySelectorAll('a[href^="#"]');
+    const anchors = document.querySelectorAll('a[href^="#"]:not([href^="#/"])');
     anchors.forEach((anchor) => anchor.addEventListener("click", handleAnchorClick));
 
     return () => {

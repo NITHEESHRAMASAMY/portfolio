@@ -80,7 +80,7 @@ export default function Education() {
               Institution
             </span>
             <h4 className="text-lg md:text-xl font-mono text-neutral-300">
-              PSG College of Technology (Affiliated / Autonomous)
+              Dr. N.G.P. Institute of Technology
             </h4>
             <span className="text-xs text-neutral-500 font-sans font-light mt-1">
               Coimbatore, Tamil Nadu, India
@@ -92,7 +92,7 @@ export default function Education() {
               Academic Period
             </span>
             <span className="text-lg md:text-xl font-mono text-white">
-              2022 – 2026 // Final Year Candidate
+              Dec 2025 – Present // B.E. Student (5th Sem)
             </span>
           </div>
         </motion.div>
@@ -124,19 +124,19 @@ export default function Education() {
                 Cumulative CGPA
               </span>
               <div className="text-7xl md:text-8xl tracking-tighter">
-                <CGPACounter value={9.24} />
+                <CGPACounter value={8.28} />
                 <span className="text-2xl md:text-3xl text-neutral-600 font-mono">/10.0</span>
               </div>
             </div>
 
             <div className="border-t border-neutral-900 pt-4 flex flex-col gap-1.5 font-mono text-[9px] text-neutral-500">
               <div className="flex justify-between">
-                <span>Class Rank:</span>
-                <span className="text-white">Top 5%</span>
+                <span>Academic Standing:</span>
+                <span className="text-white">No backlogs</span>
               </div>
               <div className="flex justify-between">
                 <span>Syllabus focus:</span>
-                <span className="text-white">Algorithms & Systems</span>
+                <span className="text-white">Computer Science</span>
               </div>
             </div>
           </motion.div>

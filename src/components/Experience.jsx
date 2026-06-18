@@ -6,34 +6,34 @@ const experienceData = [
   {
     type: "internship",
     icon: Briefcase,
-    title: "Backend Developer Intern",
-    company: "Apex Tech Labs",
-    date: "Dec 2025 – Feb 2026",
-    description: "Built scalable REST API systems in Java using Spring Boot. Interfaced application schemas with MySQL databases, implemented caching indices in Redis, and optimized query runtimes by 22%.",
+    title: "Gen AI & LLM Intern",
+    company: "Gateway Software Solutions, Coimbatore (On-Site)",
+    date: "Jun 2025 – Jul 2025",
+    description: "Worked on Generative AI and LLM-based solutions, developing prototype applications and experimenting with AI models for practical, real-world utility.",
   },
   {
-    type: "freelance",
+    type: "internship",
     icon: Briefcase,
-    title: "Freelance Full Stack Developer",
-    company: "Independent Contracts",
-    date: "Jun 2025 – Present",
-    description: "Designed responsive portfolio landing pages and e-commerce dashboards. Implemented server-side routing engines, React dashboard charts, and structured custom content systems.",
+    title: "Web Developer Intern",
+    company: "Cognifyz Technologies, Nagpur (Remote)",
+    date: "Sep 2025 – Oct 2025",
+    description: "Gained hands-on experience in Web Development and backend integrations, building responsive, performance-focused web apps using HTML/CSS, JavaScript, and database structures.",
   },
   {
     type: "hackathon",
     icon: Award,
-    title: "Smart India Hackathon Finalist",
-    company: "Ministry of Education, Govt of India",
-    date: "Oct 2025",
-    description: "Co-engineered an automated emergency dispatch and route routing engine using Node.js, Leaflet vector maps, and PostgreSQL geo-spatial extensions. Pitch presented to ministry jury members.",
+    title: "Ideathon Participant",
+    company: "Bannari Amman Institute of Technology",
+    date: "2025",
+    description: "Collaborated on designing and presenting technology solutions for institutional challenges, pitching ideas to review panel members.",
   },
   {
     type: "certification",
     icon: GraduationCap,
-    title: "Oracle Java SE Certified Associate",
-    company: "Oracle Academy",
-    date: "Jul 2025",
-    description: "Certified competence in core Java platform logic, concurrency paradigms, polymorphism architectures, exception constructs, and memory leak mitigation operations.",
+    title: "NPTEL - IOT & Cloud Computing",
+    company: "IIT (NPTEL Online Certification)",
+    date: "2024",
+    description: "Certified competence in internet of things sensor layers, distributed cloud structures, cloud infrastructure services, and messaging protocols.",
   },
 ];
 
@@ -78,7 +78,6 @@ export default function Experience() {
         {/* Experience nodes */}
         <div className="flex flex-col gap-16 md:gap-24">
           {experienceData.map((item, idx) => {
-            const Icon = item.icon;
             const isLeft = idx % 2 === 0;
 
             return (

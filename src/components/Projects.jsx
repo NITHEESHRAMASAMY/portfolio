@@ -24,35 +24,46 @@ const projectsData = [
   {
     id: 1,
     num: "01",
-    name: "OmniShare REST Core",
-    tagline: "High-Performance URL Routing Engine",
-    description: "A high-throughput URL shortener and real-time analytics engine. Designed to handle over 10,000 requests per minute with sub-10ms redirection latencies. Implements partitioned PostgreSQL indexing and a pre-cached Redis routing layer.",
-    tech: ["Java", "Spring Boot", "Redis", "PostgreSQL", "Docker"],
-    github: "https://github.com",
-    live: "https://example.com",
-    visual: "omnishare",
+    name: "Code Logic Validator",
+    tagline: "AI Orchestration Logic Evaluation Engine",
+    description: "An AI-powered agent designed for the Smart India Hackathon (SIH) Education & Skilling domain. Evaluates a beginner's problem-solving logic written in plain text without revealing the actual code solutions. Utilizes LLM orchestration to assess correctness, provide targeted hints, and guide reasoning steps autonomously.",
+    tech: ["Python", "LLM APIs", "Prompt Engineering"],
+    github: "https://github.com/NITHEESHRAMASAMY",
+    live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "validator",
   },
   {
     id: 2,
     num: "02",
-    name: "Eclipse Engine",
-    tagline: "WebGL 3D Interactive Customizer",
-    description: "A reactive WebGL engine built to customize and render product assets in real-time. Features custom physically-based rendering (PBR) shaders, orbital coordinate cameras, dynamic studio lighting rigs, and state integration with React.",
-    tech: ["React", "Three.js", "WebGL", "GSAP", "Tailwind"],
-    github: "https://github.com",
-    live: "https://example.com",
-    visual: "eclipse",
+    name: "Techiegram",
+    tagline: "Short Technical Video Reels Platform",
+    description: "A web platform to share short technical video reels with features like user uploads, video feeds, likes, and categorized content. Implements smooth video delivery on the frontend and custom REST APIs on the backend.",
+    tech: ["HTML/CSS", "JavaScript", "Java", "REST APIs", "MongoDB"],
+    github: "https://github.com/NITHEESHRAMASAMY",
+    live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "techiegram",
   },
   {
     id: 3,
     num: "03",
-    name: "Aura DB",
-    tagline: "Go-Engineered LSM JSON Store",
-    description: "A lightweight, embeddable JSON document database. Engineered with a Write-Ahead Log (WAL) for absolute crash recovery and a Log-Structured Merge (LSM) Tree storage engine for sequential write performance.",
-    tech: ["Go", "JSON Schema", "LSM-Tree", "Disk I/O"],
-    github: "https://github.com",
-    live: "https://example.com",
-    visual: "auradb",
+    name: "Smart Leaf Scanner",
+    tagline: "CNN Plant Disease Detection System",
+    description: "A deep learning Convolutional Neural Network (CNN) designed to detect and classify plant diseases from leaf images with high accuracy. Includes a clean, interactive Streamlit web dashboard for real-time predictions and visualizations.",
+    tech: ["Python", "CNN", "TensorFlow", "OpenCV", "Streamlit"],
+    github: "https://github.com/NITHEESHRAMASAMY",
+    live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "scanner",
+  },
+  {
+    id: 4,
+    num: "04",
+    name: "ContextKey-Logger",
+    tagline: "OS-Level Context-Aware Keystroke Analyzer",
+    description: "A Python-based keystroke capture tool utilizing pynput to log keystrokes. Integrates OS-level window focus detection (Windows API / ctypes) to associate logged strokes with their active application context securely.",
+    tech: ["Python", "Pynput", "ctypes", "Windows API"],
+    github: "https://github.com/NITHEESHRAMASAMY",
+    live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "keylogger",
   },
 ];
 
@@ -240,76 +251,101 @@ export default function Projects() {
 
                   {/* Mid visual content: custom vector drawings of dashboards/networks/code */}
                   <div className="flex-1 flex items-center justify-center relative overflow-hidden py-4">
-                    {/* Visual 1: OmniShare dashboard */}
+                    {/* Visual 1: Code Logic Validator */}
                     {activeIdx === 0 && (
-                      <div className="w-full flex flex-col gap-3 font-mono text-[8px] text-neutral-500">
-                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold mb-2 border-b border-neutral-900 pb-1">
-                          <span>API Router status</span>
-                          <span className="text-green-500 animate-pulse">200 OK</span>
+                      <div className="w-full flex flex-col gap-2.5 font-mono text-[8px] text-neutral-500">
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>AGENT LOGIC COGNITION</span>
+                          <span className="text-green-500 animate-pulse">ACTIVE</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>GET /s/omnishare-core</span>
-                          <span className="text-white">Redirect 302</span>
+                          <span>Prompt Orchestration:</span>
+                          <span className="text-white">SIH-Ed-System-v2</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Cache Status</span>
-                          <span className="text-white">REDIS_HIT (0.4ms)</span>
+                          <span>Cognitive Parser:</span>
+                          <span className="text-neutral-300">LLM_API_ROUTING</span>
                         </div>
-                        <div className="h-[50px] border border-neutral-800 rounded relative overflow-hidden flex items-end">
-                          {/* Mock bar chart graph */}
-                          <div className="flex items-end justify-between w-full h-full px-2 pt-4">
-                            <div className="w-4 bg-white/20 h-[30%]" />
-                            <div className="w-4 bg-white/30 h-[50%]" />
-                            <div className="w-4 bg-white/40 h-[40%]" />
-                            <div className="w-4 bg-white/60 h-[70%]" />
-                            <div className="w-4 bg-white h-[90%]" />
-                          </div>
+                        <div className="p-2.5 border border-neutral-900 bg-neutral-950 rounded text-neutral-400 text-[7px] leading-normal">
+                          <p className="text-green-400 font-bold">// USER INPUT SENTENCE:</p>
+                          <p>"I want to find prime numbers using a sieve."</p>
+                          <p className="text-white mt-1">// TARGETED AGENT HINT GENERATED:</p>
+                          <p>"Try initializing a boolean array of size N..."</p>
                         </div>
                       </div>
                     )}
 
-                    {/* Visual 2: Eclipse Engine WebGL customizer */}
+                    {/* Visual 2: Techiegram */}
                     {activeIdx === 1 && (
-                      <div className="w-full h-full flex items-center justify-center relative">
-                        {/* 3D wireframe mesh orbit graphics */}
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-                          className="w-32 h-32 rounded-full border border-dashed border-white/20 flex items-center justify-center"
-                        >
-                          <div className="w-20 h-20 rounded-full border border-double border-white/40 flex items-center justify-center">
-                            <div className="w-8 h-8 rounded-full bg-white/80" />
+                      <div className="w-full h-full flex items-center justify-center relative p-2">
+                        <div className="w-[120px] h-full border border-neutral-800 rounded-xl relative bg-neutral-950 p-2 flex flex-col justify-between">
+                          <div className="flex justify-between items-center text-[7px] border-b border-neutral-900 pb-1">
+                            <span className="text-white font-bold">Techiegram App</span>
+                            <span className="text-neutral-500">1080p</span>
                           </div>
-                        </motion.div>
-                        <div className="absolute top-2 left-2 font-mono text-[8px] text-neutral-600 uppercase">
-                          Renderer // Physically Based Shaders
+                          <div className="flex-1 flex items-center justify-center my-2 border border-dashed border-neutral-900 rounded relative overflow-hidden bg-neutral-900">
+                            {/* Reel icon vector placeholder */}
+                            <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+                            <div className="absolute bottom-1 right-1 font-mono text-[6px] text-neutral-500">
+                              PLAY_DRAFT
+                            </div>
+                          </div>
+                          <div className="flex justify-between text-[6px] text-neutral-400">
+                            <span>Likes: 12.4k</span>
+                            <span>MDB Status: UP</span>
+                          </div>
                         </div>
                       </div>
                     )}
 
-                    {/* Visual 3: Aura DB LSM store */}
+                    {/* Visual 3: Smart Leaf Scanner */}
                     {activeIdx === 2 && (
                       <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500">
-                        <div className="text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
-                          LSM-Tree Index Schema
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>CNN IMAGERY PROCESSOR</span>
+                          <span className="text-white">SCANNING</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white bg-neutral-800 px-1.5 py-0.5 rounded">MemTable</span>
-                          <span className="text-neutral-600">→</span>
-                          <span className="text-neutral-400">WAL Log File</span>
+                        <div className="flex justify-between">
+                          <span>Classification Model:</span>
+                          <span className="text-white">TensorFlow // CNN</span>
                         </div>
-                        <div className="pl-4 border-l border-neutral-800 flex flex-col gap-1.5 mt-1">
+                        <div className="flex justify-between">
+                          <span>Resolution:</span>
+                          <span className="text-neutral-400">224 x 224 x 3</span>
+                        </div>
+                        <div className="pl-3 border-l border-neutral-800 flex flex-col gap-1 mt-1 text-[7px]">
                           <div className="flex justify-between">
-                            <span>SSTable Level 0</span>
-                            <span className="text-white font-bold">Flush Disk</span>
+                            <span>Target Leaf Status:</span>
+                            <span className="text-green-500 font-bold">96.8% Rust Detected</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>SSTable Level 1</span>
-                            <span className="text-neutral-600">Compacted (Run)</span>
+                            <span>Streamlit View:</span>
+                            <span className="text-white">RENDERED</span>
                           </div>
                         </div>
-                        <div className="text-[7px] text-neutral-600 truncate mt-1">
-                          Hash: 0x8a1b9f7c00eef32b1a8d...
+                      </div>
+                    )}
+
+                    {/* Visual 4: ContextKey-Logger */}
+                    {activeIdx === 3 && (
+                      <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500">
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>WINDOWS KERNEL AUDIT</span>
+                          <span className="text-red-500">LOGGING</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Active Window Hook:</span>
+                          <span className="text-white">chrome.exe</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Buffer Registry:</span>
+                          <span className="text-neutral-400">ctypes.wintypes</span>
+                        </div>
+                        <div className="p-2 border border-neutral-900 bg-neutral-950 rounded text-neutral-400 text-[6px] font-mono leading-tight max-h-[60px] overflow-hidden">
+                          <p>[22:42:01] Hook Focus: vscode.exe</p>
+                          <p>[22:42:04] Keys: import sys\n</p>
+                          <p>[22:42:09] Hook Focus: chrome.exe</p>
+                          <p>[22:42:15] Keys: github.com</p>
                         </div>
                       </div>
                     )}

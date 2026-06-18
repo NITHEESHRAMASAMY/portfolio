@@ -2,15 +2,19 @@ import { useEffect, useRef, useState } from "react";
 
 const skillsList = [
   "Java",
-  "JavaScript",
-  "React",
-  "Node.js",
+  "Python",
   "MongoDB",
-  "MySQL",
-  "Git",
-  "GitHub",
+  "PostgreSQL",
   "HTML",
   "CSS",
+  "JavaScript",
+  "Prompt Eng",
+  "UI-UX Design",
+  "REST APIs",
+  "Data Analysis",
+  "Cloud Dev",
+  "Git",
+  "GitHub",
 ];
 
 export default function Skills() {
@@ -147,7 +151,8 @@ export default function Skills() {
             this.y,
             this.radius * 1.3
           );
-          radGrad.addColorStop(0, `rgba(255, 255, 255, ${0.12 * this.glow})`);
+          const isLight = document.documentElement.classList.contains("light");
+          radGrad.addColorStop(0, isLight ? `rgba(0, 0, 0, ${0.12 * this.glow})` : `rgba(255, 255, 255, ${0.12 * this.glow})`);
           radGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius * 1.3, 0, Math.PI * 2);
@@ -158,8 +163,9 @@ export default function Skills() {
         // Draw bubble card
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(10, 10, 10, 0.9)";
-        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + this.glow * 0.4})`;
+        const isLight = document.documentElement.classList.contains("light");
+        ctx.fillStyle = isLight ? "rgba(245, 245, 245, 0.9)" : "rgba(10, 10, 10, 0.9)";
+        ctx.strokeStyle = isLight ? `rgba(0, 0, 0, ${0.1 + this.glow * 0.4})` : `rgba(255, 255, 255, ${0.1 + this.glow * 0.4})`;
         ctx.lineWidth = this.glow > 0 ? 1.5 : 1;
         ctx.fill();
         ctx.stroke();
@@ -170,7 +176,7 @@ export default function Skills() {
         ctx.rotate(this.angle);
         
         ctx.font = `500 ${window.innerWidth < 768 ? "9px" : "11px"} "Space Grotesk", sans-serif`;
-        ctx.fillStyle = this.glow > 0 ? "#ffffff" : "#d4d4d4";
+        ctx.fillStyle = this.glow > 0 ? (isLight ? "#000000" : "#ffffff") : (isLight ? "#555555" : "#d4d4d4");
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(this.text.toUpperCase(), 0, 0);
@@ -256,7 +262,8 @@ export default function Skills() {
 
     // Render physics loops
     const render = () => {
-      ctx.fillStyle = "#000000";
+      const isLight = document.documentElement.classList.contains("light");
+      ctx.fillStyle = isLight ? "#ffffff" : "#000000";
       ctx.fillRect(0, 0, width, height);
 
       // Solve overlaps first
@@ -274,7 +281,7 @@ export default function Skills() {
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
+            ctx.strokeStyle = isLight ? `rgba(0, 0, 0, ${lineAlpha})` : `rgba(255, 255, 255, ${lineAlpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -347,15 +354,19 @@ export default function Skills() {
 
           <p className="text-neutral-400 font-sans font-light text-sm leading-relaxed min-h-[80px]">
             {hoveredSkill === "Java" && "Deep understanding of core OOP principles, concurrency frameworks, collections structure, and database mappings."}
-            {hoveredSkill === "JavaScript" && "Asynchronous programming models, functional ES6 operations, lexical scopes, and browser runtime engines."}
-            {hoveredSkill === "React" && "Reconciliation loops, functional hooks, performance optimizations, state providers, and Framer Motion layouts."}
-            {hoveredSkill === "Node.js" && "V8 non-blocking event-loops, express web routers, REST integrations, and middleware systems."}
-            {hoveredSkill === "MongoDB" && "Document indexing pipelines, schema design, transactional structures, and cluster queries."}
-            {hoveredSkill === "MySQL" && "Relational normalization, ACID guarantees, relational joins, indexes, and custom stored procedures."}
+            {hoveredSkill === "Python" && "Experienced in data structures scripting, CNN classification architectures, and LLM automation tools."}
+            {hoveredSkill === "MongoDB" && "Document indexing pipelines, schema designs, transactional structures, and query aggregates."}
+            {hoveredSkill === "PostgreSQL" && "Relational database normalization, ACID consistency guarantees, indexing, and complex queries."}
+            {hoveredSkill === "HTML" && "Semantic markup structure, layout accessibility standards, DOM structures, and element hierarchies."}
+            {hoveredSkill === "CSS" && "Flexbox layouts, CSS grids, responsive media queries, and keyframe transition animations."}
+            {hoveredSkill === "JavaScript" && "Asynchronous programming models, lexical scopes, ES6 features, and event loop handling."}
+            {hoveredSkill === "Prompt Eng" && "LLM prompt design orchestration, autonomous agent chains, model behavior tuning, and tool integration."}
+            {hoveredSkill === "UI-UX Design" && "Figma prototypes, UI components layout design, user flow maps, and responsive minimal aesthetics."}
+            {hoveredSkill === "REST APIs" && "RESTful route routing structures, request validation logic, HTTP statuses, and JSON data formats."}
+            {hoveredSkill === "Data Analysis" && "Analyzing patterns, statistics computation, dataset extraction, and tabular data presentations."}
+            {hoveredSkill === "Cloud Dev" && "Understanding basic cloud infrastructure, serverless functions, deployment networks, and CI/CD pipelines."}
             {hoveredSkill === "Git" && "Branch rebases, stash protocols, history commits, remote pulls, and merge conflict resolution."}
             {hoveredSkill === "GitHub" && "CI/CD action runners, pull request reviews, repository hooks, and collaborative documentation."}
-            {hoveredSkill === "HTML" && "Semantic layouts, page accessibility standards, DOM tree structures, and standard document schemas."}
-            {hoveredSkill === "CSS" && "Flexbox alignments, Grid systems, responsive styling media queries, and transition keyframes."}
             {!hoveredSkill && "Move your cursor inside the physics canvas sandbox and hover over any of the floating nodes to inspect the competence details."}
           </p>
 
