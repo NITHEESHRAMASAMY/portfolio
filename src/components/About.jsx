@@ -102,8 +102,8 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="border-t border-neutral-900 pt-12 mt-8"
           >
-            <h4 className="text-2xl md:text-4xl font-display font-light text-neutral-300 italic tracking-tight leading-snug">
-              "Transforming Ideas Into Digital Experiences."
+            <h4 className="text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-serif font-light text-neutral-200 italic tracking-wide leading-none whitespace-nowrap">
+              "Creating intelligent solutions for a digital future"
             </h4>
             <p className="font-mono text-[9px] text-neutral-500 tracking-[0.25em] uppercase mt-4">
               // Nitheesh Design Creed

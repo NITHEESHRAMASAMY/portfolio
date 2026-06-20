@@ -1,6 +1,7 @@
 /* Font Imports */
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@300,400,500,600,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500;1,600&display=swap');
 
 @import "tailwindcss";
 
@@ -8,6 +9,7 @@
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Clash Display', sans-serif;
   --font-mono: 'Space Grotesk', monospace;
+  --font-serif: 'Cormorant Garamond', serif;
 
   /* Custom monochrome agency palette */
   --color-primary: #ffffff;
