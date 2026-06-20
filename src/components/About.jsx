@@ -15,12 +15,12 @@ export default function About() {
     {
       num: "03",
       title: "Current Focus",
-      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. Experienced in Python, Java, MongoDB, and LLM-based orchestration.",
+      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. Experienced in Python, Java, MongoDB, PostgreSQL, and LLM-based orchestration.",
     },
     {
       num: "04",
       title: "Certifications",
-      text: "Certified in UI-UX Design by Maiyyam, NPTEL IoT & Cloud Computing, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
+      text: "Certified in Fullstack Development and UI-UX Design by Maiyyam, NPTEL IoT & Cloud Computing, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
     },
   ];
 
