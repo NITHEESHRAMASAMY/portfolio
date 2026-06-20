@@ -92,7 +92,7 @@ export default function Education() {
               Academic Period
             </span>
             <span className="text-lg md:text-xl font-mono text-white">
-              Dec 2025 – Present // B.E. Student (5th Sem)
+              Sep 2023 – Apr 2027 // B.E. Student
             </span>
           </div>
         </motion.div>

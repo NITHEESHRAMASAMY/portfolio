@@ -28,12 +28,12 @@ const experienceData = [
     description: "Collaborated on designing and presenting technology solutions for institutional challenges, pitching ideas to review panel members.",
   },
   {
-    type: "certification",
-    icon: GraduationCap,
-    title: "NPTEL - IOT & Cloud Computing",
-    company: "IIT (NPTEL Online Certification)",
-    date: "2024",
-    description: "Certified competence in internet of things sensor layers, distributed cloud structures, cloud infrastructure services, and messaging protocols.",
+    type: "freelancing",
+    icon: Briefcase,
+    title: "Freelancing",
+    company: "Independent Web Projects",
+    date: "2024 – Present",
+    description: "Creating custom websites for customers based on their specific requirements, ensuring high performance and responsive design.",
   },
 ];
 

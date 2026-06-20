@@ -20,7 +20,7 @@ export default function About() {
     {
       num: "04",
       title: "Certifications",
-      text: "Certified in Fullstack Development and UI-UX Design by Maiyyam, NPTEL IoT & Cloud Computing, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
+      text: "Certified in Fullstack Development and UI-UX Design by Maiyyam, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
     },
   ];
 

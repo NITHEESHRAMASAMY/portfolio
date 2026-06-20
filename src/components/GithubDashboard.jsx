@@ -40,34 +40,40 @@ function CountUp({ value, duration = 1500 }) {
 
 export default function GithubDashboard() {
   const [stats, setStats] = useState({
-    repos: 28,
-    commits: 642,
-    streak: 15,
-    longestStreak: 42,
+    repos: 3,
+    commits: 186,
+    streak: 18,
+    longestStreak: 45,
   });
   const [languages, setLanguages] = useState([
-    { name: "Java", pct: 45 },
-    { name: "JavaScript", pct: 30 },
-    { name: "React / HTML / CSS", pct: 15 },
-    { name: "Go", pct: 10 },
+    { name: "JavaScript", pct: 100 },
   ]);
+  const [contributions, setContributions] = useState(null);
   const [, setLoading] = useState(true);
 
   // Fetch from GitHub API on mount
   useEffect(() => {
     const fetchGithubData = async () => {
+      let reposCount = 3;
+      let commitsEst = 186;
+      let currentStreak = 18;
+      let longestStreak = 45;
+      let fetchedLangs = {};
+
       try {
         // Fetch user info
         const userRes = await fetch("https://api.github.com/users/NITHEESHRAMASAMY");
-        if (!userRes.ok) throw new Error("API Limit or offline");
-        const userData = await userRes.json();
-        
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          reposCount = userData.public_repos || reposCount;
+        }
+      } catch (err) {
+        console.warn("Error fetching user profile:", err);
+      }
+
+      try {
         // Fetch repositories languages estimate
         const reposRes = await fetch("https://api.github.com/users/NITHEESHRAMASAMY/repos?per_page=50");
-        let reposCount = userData.public_repos || 28;
-        let commitsEst = reposCount * 22 + 120; // Estimating commits based on repos
-        
-        let fetchedLangs = {};
         if (reposRes.ok) {
           const reposData = await reposRes.json();
           reposData.forEach((repo) => {
@@ -76,49 +82,126 @@ export default function GithubDashboard() {
             }
           });
         }
-
-        // Parse language percentages
-        const langKeys = Object.keys(fetchedLangs);
-        if (langKeys.length > 0) {
-          const totalCount = langKeys.reduce((acc, k) => acc + fetchedLangs[k], 0);
-          const langArr = langKeys.map((k) => ({
-            name: k,
-            pct: Math.round((fetchedLangs[k] / totalCount) * 100),
-          })).sort((a, b) => b.pct - a.pct);
-          setLanguages(langArr.slice(0, 4));
-        }
-
-        setStats({
-          repos: reposCount,
-          commits: commitsEst,
-          streak: 18,
-          longestStreak: 45,
-        });
       } catch (err) {
-        // If rate limited, keep fallback values
-        console.warn("Using fallback GitHub dashboard statistics due to API throttling or offline status.", err);
-      } finally {
-        setLoading(false);
+        console.warn("Error fetching repo languages:", err);
       }
+
+      try {
+        // Fetch contribution calendar
+        const contRes = await fetch("https://github-contributions-api.deno.dev/NITHEESHRAMASAMY.json");
+        if (contRes.ok) {
+          const contData = await contRes.json();
+          if (contData && contData.contributions) {
+            setContributions(contData.contributions);
+            
+            const days = contData.contributions.flat();
+            days.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let tempStreak = 0;
+            let computedLongest = 0;
+            for (let i = 0; i < days.length; i++) {
+              if (days[i].contributionCount > 0) {
+                tempStreak++;
+                if (tempStreak > computedLongest) {
+                  computedLongest = tempStreak;
+                }
+              } else {
+                tempStreak = 0;
+              }
+            }
+            
+            let lastActiveIdx = -1;
+            for (let i = days.length - 1; i >= 0; i--) {
+              if (days[i].contributionCount > 0) {
+                lastActiveIdx = i;
+                break;
+              }
+            }
+            
+            let computedCurrent = 0;
+            if (lastActiveIdx !== -1) {
+              const lastActiveDate = new Date(days[lastActiveIdx].date);
+              const today = new Date();
+              const diffTime = Math.abs(today - lastActiveDate);
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              
+              if (diffDays <= 2) {
+                for (let i = lastActiveIdx; i >= 0; i--) {
+                  if (days[i].contributionCount > 0) {
+                    computedCurrent++;
+                  } else {
+                    break;
+                  }
+                }
+              }
+            }
+            
+            commitsEst = contData.totalContributions || commitsEst;
+            currentStreak = computedCurrent || currentStreak;
+            longestStreak = computedLongest || longestStreak;
+          }
+        }
+      } catch (err) {
+        console.warn("Error fetching contributions:", err);
+      }
+
+      // Parse language percentages
+      const langKeys = Object.keys(fetchedLangs);
+      if (langKeys.length > 0) {
+        const totalCount = langKeys.reduce((acc, k) => acc + fetchedLangs[k], 0);
+        const langArr = langKeys.map((k) => ({
+          name: k,
+          pct: Math.round((fetchedLangs[k] / totalCount) * 100),
+        })).sort((a, b) => b.pct - a.pct);
+        setLanguages(langArr.slice(0, 4));
+      } else {
+        setLanguages([{ name: "JavaScript", pct: 100 }]);
+      }
+
+      setStats({
+        repos: reposCount,
+        commits: commitsEst,
+        streak: currentStreak,
+        longestStreak: longestStreak,
+      });
+      setLoading(false);
     };
 
     fetchGithubData();
   }, []);
 
-  // Generate matrix for contribution graph (53 columns x 7 rows)
-  const columns = Array.from({ length: 42 }); // Sized to fit screen nicely
+  // Generate matrix fallback
+  const columns = Array.from({ length: 42 });
   const rows = Array.from({ length: 7 });
 
-  // Monochrome color scales for contribution matrix squares
-  const getContributionColor = (colIdx, rowIdx) => {
+  // Green color scales for contribution matrix squares
+  const getContributionColorFallback = (colIdx, rowIdx) => {
     const rand = Math.sin(colIdx * 3 + rowIdx * 7) * 10;
     const value = Math.abs(Math.floor(rand)) % 5;
     
     if (value === 0) return "bg-neutral-900";        // 0 commits
-    if (value === 1) return "bg-neutral-800";        // 1-3 commits
-    if (value === 2) return "bg-neutral-700";        // 3-6 commits
-    if (value === 3) return "bg-neutral-500";        // 6-9 commits
-    return "bg-white";                               // 10+ commits
+    if (value === 1) return "bg-emerald-950";        // 1-3 commits
+    if (value === 2) return "bg-emerald-800";        // 3-6 commits
+    if (value === 3) return "bg-emerald-600";        // 6-9 commits
+    return "bg-emerald-400";                         // 10+ commits
+  };
+
+  const getContributionColorForDay = (day) => {
+    if (!day || day.contributionCount === 0 || day.contributionLevel === "NONE") {
+      return "bg-neutral-900";
+    }
+    switch (day.contributionLevel) {
+      case "FIRST_QUARTILE":
+        return "bg-emerald-950";
+      case "SECOND_QUARTILE":
+        return "bg-emerald-800";
+      case "THIRD_QUARTILE":
+        return "bg-emerald-600";
+      case "FOURTH_QUARTILE":
+        return "bg-emerald-400";
+      default:
+        return "bg-emerald-700";
+    }
   };
 
   return (
@@ -242,32 +325,39 @@ export default function GithubDashboard() {
               Contribution History
             </span>
             <span className="font-mono text-[9px] text-neutral-600 uppercase">
-              Monochrome Grid // 53w
+              Green Grid // 53w
             </span>
           </div>
 
           {/* Svg/HTML Grid Container */}
           <div className="flex-1 flex flex-col justify-center overflow-x-auto select-none py-6 scrollbar-none">
             <div className="flex gap-[3px] min-w-full">
-              {columns.map((col, colIdx) => (
+              {(contributions || columns).map((colVal, colIdx) => (
                 <div key={colIdx} className="flex flex-col gap-[3px]">
-                  {rows.map((row, rowIdx) => (
-                    <motion.div
-                      key={rowIdx}
-                      initial={{ scale: 0.6, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, margin: "-20px" }}
-                      transition={{
-                        duration: 0.4,
-                        delay: (colIdx * 7 + rowIdx) * 0.001, // Stagger grid squares sequentially
-                      }}
-                      className={`w-[7px] h-[7px] md:w-[9px] md:h-[9px] rounded-sm transition-colors duration-500 hover:scale-125 ${getContributionColor(
-                        colIdx,
-                        rowIdx
-                      )}`}
-                      title={`Week ${colIdx}, Day ${rowIdx}`}
-                    />
-                  ))}
+                  {(contributions ? colVal : rows).map((dayVal, rowIdx) => {
+                    const colorClass = contributions
+                      ? getContributionColorForDay(dayVal)
+                      : getContributionColorFallback(colIdx, rowIdx);
+                    
+                    const titleText = contributions
+                      ? `${dayVal.contributionCount} contributions on ${dayVal.date}`
+                      : `Week ${colIdx}, Day ${rowIdx}`;
+
+                    return (
+                      <motion.div
+                        key={rowIdx}
+                        initial={{ scale: 0.6, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true, margin: "-20px" }}
+                        transition={{
+                          duration: 0.4,
+                          delay: (colIdx * 7 + rowIdx) * 0.001, // Stagger grid squares sequentially
+                        }}
+                        className={`w-[7px] h-[7px] md:w-[9px] md:h-[9px] rounded-sm transition-colors duration-500 hover:scale-125 ${colorClass}`}
+                        title={titleText}
+                      />
+                    );
+                  })}
                 </div>
               ))}
             </div>
@@ -277,10 +367,10 @@ export default function GithubDashboard() {
               <span>Less</span>
               <div className="flex gap-[3px] items-center">
                 <div className="w-[7px] h-[7px] bg-neutral-900 rounded-sm" />
-                <div className="w-[7px] h-[7px] bg-neutral-800 rounded-sm" />
-                <div className="w-[7px] h-[7px] bg-neutral-700 rounded-sm" />
-                <div className="w-[7px] h-[7px] bg-neutral-500 rounded-sm" />
-                <div className="w-[7px] h-[7px] bg-white rounded-sm" />
+                <div className="w-[7px] h-[7px] bg-emerald-950 rounded-sm" />
+                <div className="w-[7px] h-[7px] bg-emerald-800 rounded-sm" />
+                <div className="w-[7px] h-[7px] bg-emerald-600 rounded-sm" />
+                <div className="w-[7px] h-[7px] bg-emerald-400 rounded-sm" />
               </div>
               <span>More</span>
             </div>
