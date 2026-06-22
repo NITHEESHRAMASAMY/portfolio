@@ -94,23 +94,24 @@ export default function About() {
             ))}
           </div>
 
-          {/* Tagline Graphic Block */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="border-t border-neutral-900 pt-12 mt-8"
-          >
-            <h4 className="text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-serif font-light text-neutral-200 italic tracking-wide leading-none whitespace-nowrap">
-              "Creating intelligent solutions for a digital future"
-            </h4>
-            <p className="font-mono text-[9px] text-neutral-500 tracking-[0.25em] uppercase mt-4">
-              // Nitheesh Design Creed
-            </p>
-          </motion.div>
         </div>
       </div>
+
+      {/* Tagline Graphic Block */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="border-t border-neutral-900 pt-12 mt-16 w-full"
+      >
+        <h4 className="text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-serif font-light text-neutral-200 italic tracking-wide leading-none whitespace-nowrap">
+          "Creating intelligent solutions for a digital future"
+        </h4>
+        <p className="font-mono text-[9px] text-neutral-500 tracking-[0.25em] uppercase mt-4">
+          // Nitheesh Design Creed
+        </p>
+      </motion.div>
 
       {/* Footer copyright anchor */}
       <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
