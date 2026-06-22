@@ -20,14 +20,14 @@ export default function About() {
     {
       num: "04",
       title: "Certifications",
-      text: "Certified in Fullstack Development and UI-UX Design by Maiyyam, and recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute).",
+      text: "Certified in Fullstack Development and UI-UX Design by Maiyyam, recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute), along with Learnathon 2023 and 2024 certificates.",
     },
   ];
 
   return (
     <section
       id="about"
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative overflow-hidden"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
         {/* Left Column: Heading and Portrait */}
@@ -50,7 +50,7 @@ export default function About() {
             className="relative w-full aspect-[4/5] max-w-[360px] md:max-w-full rounded bg-neutral-900 border border-neutral-800 overflow-hidden group"
           >
             <motion.img
-              src="/profile.png"
+              src="/profile-updated.png"
               alt="Nitheesh"
               className="w-full h-full object-cover filter grayscale contrast-125 brightness-95 group-hover:scale-105 transition-transform duration-700 ease-out"
             />
@@ -99,13 +99,13 @@ export default function About() {
 
       {/* Tagline Graphic Block */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: 100 }}
+        whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="border-t border-neutral-900 pt-12 mt-16 w-full"
+        className="border-t border-neutral-900 pt-12 mt-16 w-full text-center"
       >
-        <h4 className="text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-serif font-light text-neutral-200 italic tracking-wide leading-none whitespace-nowrap">
+        <h4 className="text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-serif font-light text-neutral-200 italic tracking-wide leading-none">
           "Creating intelligent solutions for a digital future"
         </h4>
         <p className="font-mono text-[9px] text-neutral-500 tracking-[0.25em] uppercase mt-4">

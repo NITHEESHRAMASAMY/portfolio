@@ -59,10 +59,10 @@ export default function HeroBackground() {
         }
       }
 
-      draw() {
+      draw(isLight) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fillStyle = isLight ? `rgba(0, 0, 0, ${this.alpha})` : `rgba(255, 255, 255, ${this.alpha})`;
         ctx.fill();
       }
     }
@@ -94,8 +94,10 @@ export default function HeroBackground() {
 
     // Render loop
     const render = () => {
-      // Clear with dark subtle fade
-      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+      const isLight = document.documentElement.classList.contains("light");
+
+      // Clear with subtle fade based on light/dark mode
+      ctx.fillStyle = isLight ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, width, height);
 
       // Smooth mouse interpolation (lagging spotlight effect)
@@ -113,8 +115,8 @@ export default function HeroBackground() {
           mouse.y,
           width * 0.4
         );
-        gradient.addColorStop(0, "rgba(25, 25, 25, 0.2)");
-        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+        gradient.addColorStop(0, isLight ? "rgba(230, 230, 230, 0.2)" : "rgba(25, 25, 25, 0.2)");
+        gradient.addColorStop(1, isLight ? "rgba(255, 255, 255, 0)" : "rgba(0, 0, 0, 0)");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
       }
@@ -131,7 +133,7 @@ export default function HeroBackground() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.strokeStyle = isLight ? `rgba(0, 0, 0, ${alpha})` : `rgba(255, 255, 255, ${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -141,7 +143,7 @@ export default function HeroBackground() {
       // Update and draw particles
       particles.forEach((p) => {
         p.update();
-        p.draw();
+        p.draw(isLight);
       });
 
       animationId = requestAnimationFrame(render);
@@ -160,7 +162,7 @@ export default function HeroBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 bg-black"
+      className="absolute inset-0 w-full h-full pointer-events-none z-0 bg-transparent"
     />
   );
 }

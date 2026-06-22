@@ -15,6 +15,11 @@ const skillsList = [
   "Cloud Dev",
   "Git",
   "GitHub",
+  "Vibe Coding",
+  "SDLC & Agile",
+  "Communication",
+  "Adaptability",
+  "Creativity",
 ];
 
 export default function Skills() {
@@ -367,6 +372,11 @@ export default function Skills() {
             {hoveredSkill === "Cloud Dev" && "Understanding basic cloud infrastructure, serverless functions, deployment networks, and CI/CD pipelines."}
             {hoveredSkill === "Git" && "Branch rebases, stash protocols, history commits, remote pulls, and merge conflict resolution."}
             {hoveredSkill === "GitHub" && "CI/CD action runners, pull request reviews, repository hooks, and collaborative documentation."}
+            {hoveredSkill === "Vibe Coding" && "Fast-prototyping, rapid exploration of features, and AI-assisted pair programming workflows."}
+            {hoveredSkill === "SDLC & Agile" && "Familiar with Scrum methodology, Sprint planning, software engineering phases, and iterative development cycles."}
+            {hoveredSkill === "Communication" && "Active listener and clear communicator, converting complex developer logic into easy-to-understand design paradigms."}
+            {hoveredSkill === "Adaptability" && "Quick to learn new programming frameworks, responsive to changing constraints, and open to continuous feedback."}
+            {hoveredSkill === "Creativity" && "Innovative problem-solver, exploring artistic user interfaces, micro-interactions, and novel design choices."}
             {!hoveredSkill && "Move your cursor inside the physics canvas sandbox and hover over any of the floating nodes to inspect the competence details."}
           </p>
 
