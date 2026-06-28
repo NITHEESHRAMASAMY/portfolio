@@ -63,11 +63,11 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative blueprint-grid"
     >
       {/* Title */}
       <div className="flex flex-col gap-2 mb-16">
-        <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
+        <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase">
           [ GET IN TOUCH ]
         </span>
         <h2 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white uppercase leading-none">
@@ -79,30 +79,30 @@ export default function Contact() {
         {/* Left Side: Contact Info */}
         <div className="lg:col-span-5 flex flex-col gap-10">
           <div className="flex flex-col gap-4">
-            <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest">// Connection Details</span>
+            <span className="font-mono text-xs text-accent/60 uppercase tracking-widest">// Connection Details</span>
             <p className="text-neutral-400 font-sans font-light text-base leading-relaxed">
               Have an opening in your software engineering team? Want to collaborate on a full-stack project, or just discuss core Java concepts? Shoot me a message.
             </p>
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-1.5 border-l border-neutral-900 pl-6">
-              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest">Email Address</span>
-              <a href="mailto:nitheesh25blsl@gmail.com" className="text-white hover:text-neutral-400 transition-colors text-lg font-mono">
+            <div className="flex flex-col gap-1.5 border-l border-accent/20 pl-6">
+              <span className="font-mono text-[9px] text-accent/60 uppercase tracking-widest">Email Address</span>
+              <a href="mailto:nitheesh25blsl@gmail.com" className="text-white hover:text-accent transition-colors duration-300 text-lg font-mono">
                 nitheesh25blsl@gmail.com
               </a>
             </div>
 
-            <div className="flex flex-col gap-1.5 border-l border-neutral-900 pl-6">
-              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest">Current Location</span>
+            <div className="flex flex-col gap-1.5 border-l border-accent/20 pl-6">
+              <span className="font-mono text-[9px] text-accent/60 uppercase tracking-widest">Current Location</span>
               <span className="text-neutral-300 text-lg font-mono">Tiruppur, Tamil Nadu, India</span>
             </div>
           </div>
         </div>
 
         {/* Right Side: Form panel with Success anim */}
-        <div className="lg:col-span-7 border border-neutral-900 bg-neutral-950/40 p-8 md:p-10 rounded-2xl relative overflow-hidden min-h-[460px]">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.01] rounded-full blur-2xl pointer-events-none" />
+        <div className="lg:col-span-7 border border-neutral-900 hover:border-accent/25 bg-neutral-950/40 p-8 md:p-10 rounded-2xl relative overflow-hidden min-h-[460px] transition-colors duration-300">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-accent/[0.01] rounded-full blur-2xl pointer-events-none" />
 
           <AnimatePresence mode="wait">
             {status !== "success" ? (
@@ -116,7 +116,7 @@ export default function Contact() {
               >
                 {/* Name field */}
                 <div className="flex flex-col gap-1 relative group">
-                  <label htmlFor="name" className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">
+                  <label htmlFor="name" className="font-mono text-[10px] text-neutral-500 group-hover:text-accent/80 transition-colors uppercase tracking-widest">
                     Your Name
                   </label>
                   <input
@@ -127,14 +127,14 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     disabled={status === "loading"}
-                    className="border-b border-neutral-800 focus:border-white bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans focus:shadow-[0_2px_12px_rgba(255,255,255,0.02)]"
+                    className="border-b border-neutral-800 focus:border-accent bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans focus:shadow-[0_2px_12px_rgba(0,240,255,0.02)]"
                     placeholder="Enter your name"
                   />
                 </div>
 
                 {/* Email field */}
                 <div className="flex flex-col gap-1 relative group">
-                  <label htmlFor="email" className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">
+                  <label htmlFor="email" className="font-mono text-[10px] text-neutral-500 group-hover:text-accent/80 transition-colors uppercase tracking-widest">
                     Your Email
                   </label>
                   <input
@@ -145,14 +145,14 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     disabled={status === "loading"}
-                    className="border-b border-neutral-800 focus:border-white bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans focus:shadow-[0_2px_12px_rgba(255,255,255,0.02)]"
+                    className="border-b border-neutral-800 focus:border-accent bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans focus:shadow-[0_2px_12px_rgba(0,240,255,0.02)]"
                     placeholder="Enter your email"
                   />
                 </div>
 
                 {/* Message field */}
                 <div className="flex flex-col gap-1 relative group">
-                  <label htmlFor="message" className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">
+                  <label htmlFor="message" className="font-mono text-[10px] text-neutral-500 group-hover:text-accent/80 transition-colors uppercase tracking-widest">
                     Your Message
                   </label>
                   <textarea
@@ -163,7 +163,7 @@ export default function Contact() {
                     required
                     rows={4}
                     disabled={status === "loading"}
-                    className="border-b border-neutral-800 focus:border-white bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans resize-none focus:shadow-[0_2px_12px_rgba(255,255,255,0.02)]"
+                    className="border-b border-neutral-800 focus:border-accent bg-transparent outline-none py-3 text-white transition-all duration-300 font-sans resize-none focus:shadow-[0_2px_12px_rgba(0,240,255,0.02)]"
                     placeholder="Enter your message"
                   />
                 </div>
@@ -172,17 +172,17 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="group relative flex items-center justify-center gap-2 border border-white hover:bg-white hover:text-black py-4 rounded-full transition-all duration-300 font-mono tracking-widest text-xs uppercase cursor-none w-full mt-4"
+                  className="group relative flex items-center justify-center gap-2 border border-accent/25 hover:bg-accent hover:text-black py-4 rounded-full transition-all duration-300 font-mono tracking-widest text-xs uppercase cursor-none w-full mt-4 font-medium text-white"
                 >
                   {status === "loading" ? (
                     <>
-                      <Loader className="animate-spin" size={14} />
+                      <Loader className="animate-spin text-accent" size={14} />
                       <span>SENDING MESSAGE...</span>
                     </>
                   ) : (
                     <>
                       <span>SEND MESSAGE</span>
-                      <Send size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      <Send size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-accent group-hover:text-black" />
                     </>
                   )}
                 </button>
@@ -205,7 +205,7 @@ export default function Contact() {
                   initial={{ scale: 0, rotate: -45 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", stiffness: 150, damping: 15, delay: 0.2 }}
-                  className="text-white mb-2"
+                  className="text-accent mb-2"
                 >
                   <CheckCircle size={64} strokeWidth={1} />
                 </motion.div>
@@ -220,7 +220,7 @@ export default function Contact() {
 
                 <button
                   onClick={() => setStatus("idle")}
-                  className="mt-6 border border-white/20 hover:border-white hover:text-white text-neutral-400 font-mono text-[9px] tracking-widest uppercase py-2 px-6 rounded-full transition-colors cursor-none"
+                  className="mt-6 border border-accent/25 hover:border-accent hover:text-accent text-neutral-400 font-mono text-[9px] tracking-widest uppercase py-2 px-6 rounded-full transition-colors cursor-none"
                 >
                   Send another message
                 </button>
@@ -232,7 +232,7 @@ export default function Contact() {
 
       {/* Footer copyright */}
       <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
-        <span>CONTACT // COMMS SEC</span>
+        <span>[SPEC] CONTACT // COMMS SEC</span>
         <span>026 // © NITHEESH R</span>
       </div>
     </section>

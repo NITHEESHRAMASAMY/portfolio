@@ -41,6 +41,7 @@ const Linkedin = ({ size = 16, className }) => (
 const navItems = [
   { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
+  { name: "Creed", href: "#vision-mission" },
   { name: "Projects", href: "#projects" },
   { name: "Skills", href: "#skills" },
   { name: "Experience", href: "#experience" },
@@ -135,14 +136,14 @@ export default function Navbar() {
               <motion.span
                 key={idx}
                 className="inline-block"
-                whileHover={{ y: -4, color: "#a3a3a3" }}
+                whileHover={{ y: -4, color: "var(--color-accent)" }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 {letter}
               </motion.span>
             ))}
           </div>
-          <span className="w-1.5 h-1.5 bg-white rounded-full ml-1 animate-pulse" />
+          <span className="w-1.5 h-1.5 bg-accent rounded-full ml-1 animate-pulse" />
         </a>
 
         {/* Center Side: Main Navigation Links */}
@@ -159,7 +160,7 @@ export default function Navbar() {
                 {isActive && (
                   <motion.span
                     layoutId="activeIndicator"
-                    className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-white"
+                    className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-accent"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -172,7 +173,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-5 font-mono text-[10px] tracking-wider text-neutral-400">
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-1 border border-white/10 hover:border-white hover:text-white px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40 cursor-none"
+            className="flex items-center gap-1 border border-accent/15 hover:border-accent hover:text-accent px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40 cursor-none"
             title="Toggle theme"
           >
             {isLightTheme ? <Sun size={12} /> : <Moon size={12} />}
@@ -182,7 +183,7 @@ export default function Navbar() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 border border-white/10 hover:border-white hover:text-white px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40"
+            className="flex items-center gap-1.5 border border-accent/15 hover:border-accent hover:text-accent px-3 py-1.5 rounded-full transition-all duration-300 bg-neutral-900/40"
           >
             <FileText size={12} />
             <span>RESUME</span>
@@ -259,7 +260,7 @@ export default function Navbar() {
                     }`}
                   >
                     <span>{item.name}</span>
-                    {isActive && <span className="w-1.5 h-1.5 bg-white rounded-full" />}
+                    {isActive && <span className="w-1.5 h-1.5 bg-accent rounded-full" />}
                   </a>
                 );
               })}

@@ -97,10 +97,10 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative blueprint-grid"
     >
       <div className="flex flex-col gap-2 mb-16">
-        <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
+        <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase">
           [ SELECTED WORKS ]
         </span>
         <h2 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white uppercase leading-none">
@@ -328,7 +328,7 @@ export default function Projects() {
 
                     {/* Visual 4: ContextKey-Logger */}
                     {activeIdx === 3 && (
-                      <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500">
+                      <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500 keep-dark">
                         <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
                           <span>WINDOWS KERNEL AUDIT</span>
                           <span className="text-red-500">LOGGING</span>
@@ -354,12 +354,12 @@ export default function Projects() {
                   {/* Bottom title info */}
                   <div className="border-t border-neutral-900 pt-4 flex justify-between items-end">
                     <div className="flex flex-col gap-1">
-                      <span className="font-mono text-[8px] text-neutral-600 uppercase">Interactive Preview</span>
-                      <h4 className="text-sm font-display text-white font-semibold uppercase tracking-wider">
+                      <span className="font-mono text-[8px] text-accent uppercase">[PREVIEW SPEC]</span>
+                      <h4 className="text-sm font-display text-white font-semibold uppercase tracking-wider group-hover:text-accent transition-colors duration-300">
                         {projectsData[activeIdx].name}
                       </h4>
                     </div>
-                    <ArrowUpRight size={14} className="text-white/40" />
+                    <ArrowUpRight size={14} className="text-accent" />
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -370,7 +370,7 @@ export default function Projects() {
 
       {/* Footer copyright */}
       <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
-        <span>PROJECTS // WORKS LAB</span>
+        <span>[SPEC] PROJECTS // WORKS LAB</span>
         <span>026 // © NITHEESH R</span>
       </div>
     </section>

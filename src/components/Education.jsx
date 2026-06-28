@@ -34,7 +34,7 @@ function CGPACounter({ value, duration = 2000 }) {
   }, [isInView, value, duration]);
 
   return (
-    <span ref={ref} className="font-display font-semibold tabular-nums text-white">
+    <span ref={ref} className="font-display font-semibold tabular-nums text-accent">
       {count.toFixed(2)}
     </span>
   );
@@ -44,11 +44,11 @@ export default function Education() {
   return (
     <section
       id="education"
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative overflow-hidden"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative overflow-hidden blueprint-grid"
     >
       {/* Title */}
       <div className="flex flex-col gap-2 mb-16">
-        <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
+        <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase">
           [ ACADEMICS ]
         </span>
         <h2 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white uppercase leading-none">
@@ -75,8 +75,8 @@ export default function Education() {
             </h3>
           </div>
 
-          <div className="flex flex-col gap-1 border-l-2 border-neutral-900 pl-6 py-2">
-            <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest">
+          <div className="flex flex-col gap-1 border-l-2 border-accent/30 pl-6 py-2">
+            <span className="font-mono text-xs text-accent/60 uppercase tracking-widest">
               Institution
             </span>
             <h4 className="text-lg md:text-xl font-mono text-neutral-300">
@@ -109,13 +109,13 @@ export default function Education() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="border border-neutral-900 bg-neutral-950/40 p-8 md:p-12 rounded-2xl flex flex-col justify-between gap-6 max-w-sm w-full relative shadow-2xl"
+            className="border border-neutral-900 hover:border-accent/35 bg-neutral-950/40 p-8 md:p-12 rounded-2xl flex flex-col justify-between gap-6 max-w-sm w-full relative shadow-2xl transition-colors duration-300"
           >
             {/* Corner visual marks */}
-            <div className="absolute top-4 left-4 font-mono text-[8px] text-neutral-600 uppercase">
+            <div className="absolute top-4 left-4 font-mono text-[8px] text-accent/50 uppercase">
               Academic Record Node
             </div>
-            <div className="absolute bottom-4 right-4 font-mono text-[8px] text-neutral-600 uppercase">
+            <div className="absolute bottom-4 right-4 font-mono text-[8px] text-accent/50 uppercase">
               University Scaling
             </div>
 
@@ -145,7 +145,7 @@ export default function Education() {
 
       {/* Footer copyright */}
       <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
-        <span>ACADEMICS // EDUCATION LAB</span>
+        <span>[SPEC] ACADEMICS // EDUCATION LAB</span>
         <span>026 // © NITHEESH R</span>
       </div>
     </section>

@@ -62,7 +62,7 @@ export default function HeroBackground() {
       draw(isLight) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isLight ? `rgba(0, 0, 0, ${this.alpha})` : `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fillStyle = isLight ? `rgba(0, 150, 255, ${this.alpha})` : `rgba(0, 240, 255, ${this.alpha})`;
         ctx.fill();
       }
     }
@@ -133,7 +133,7 @@ export default function HeroBackground() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = isLight ? `rgba(0, 0, 0, ${alpha})` : `rgba(255, 255, 255, ${alpha})`;
+            ctx.strokeStyle = isLight ? `rgba(0, 150, 255, ${alpha})` : `rgba(0, 240, 255, ${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }

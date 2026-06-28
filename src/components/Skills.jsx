@@ -64,85 +64,103 @@ export default function Skills() {
         this.rotSpeed = 0.005 + Math.random() * 0.01;
       }
 
-      update() {
+      update(hoveredNode, mouse) {
         // Apply friction
-        this.vx *= 0.98;
-        this.vy *= 0.98;
+        this.vx *= 0.95;
+        this.vy *= 0.95;
 
         // Apply drift back to center (orbital centering force)
         const dxCenter = width / 2 - this.x;
         const dyCenter = height / 2 - this.y;
-        this.vx += dxCenter * 0.0001;
-        this.vy += dyCenter * 0.0001;
+        this.vx += dxCenter * 0.00015;
+        this.vy += dyCenter * 0.00015;
 
-        // Drift using noise
-        this.vx += (Math.random() - 0.5) * 0.15;
-        this.vy += (Math.random() - 0.5) * 0.15;
+        const isTargetHovered = hoveredNode === this;
 
         // Bounded velocities
-        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-        if (speed > 1.5) {
-          this.vx = (this.vx / speed) * 1.5;
-          this.vy = (this.vy / speed) * 1.5;
+        if (!isTargetHovered) {
+          // Organic random drift (only when not pushed)
+          if (!hoveredNode) {
+            this.vx += (Math.random() - 0.5) * 0.12;
+            this.vy += (Math.random() - 0.5) * 0.12;
+          }
+
+          const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+          if (speed > 1.5) {
+            this.vx = (this.vx / speed) * 1.5;
+            this.vy = (this.vy / speed) * 1.5;
+          }
+        }
+
+        // Behavior controls based on hover status
+        if (hoveredNode) {
+          if (isTargetHovered) {
+            // Locked: stop completely at current spot
+            this.vx = 0;
+            this.vy = 0;
+            this.targetRadius = this.baseRadius * 1.35; // Grow larger
+            this.targetGlow = 1;
+            this.angle += this.rotSpeed * 0.5; // slow rotate
+          } else {
+            // Push away from the hovered node
+            const dx = this.x - hoveredNode.x;
+            const dy = this.y - hoveredNode.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const pushRange = 180;
+            
+            if (dist < pushRange) {
+              const force = (pushRange - dist) / pushRange;
+              this.vx += (dx / (dist || 1)) * force * 2.5;
+              this.vy += (dy / (dist || 1)) * force * 2.5;
+            }
+            this.targetRadius = this.baseRadius;
+            this.targetGlow = 0;
+            this.angle += (0 - this.angle) * 0.1;
+          }
+        } else {
+          // Regular cursor hover deflection (when no node is hovered)
+          if (mouse.active) {
+            const dxMouse = mouse.x - this.x;
+            const dyMouse = mouse.y - this.y;
+            const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+            
+            if (distMouse < this.radius + 80) {
+              const force = (this.radius + 80 - distMouse) / (this.radius + 80);
+              this.vx -= (dxMouse / distMouse) * force * 0.8;
+              this.vy -= (dyMouse / distMouse) * force * 0.8;
+            }
+          }
+          
+          this.targetRadius = this.baseRadius;
+          this.targetGlow = 0;
+          this.angle += (0 - this.angle) * 0.1;
         }
 
         // Apply step coordinates
         this.x += this.vx;
         this.y += this.vy;
 
-        // Boundary bounding collision checks
-        if (this.x - this.radius < 10) {
-          this.x = this.radius + 10;
+        // Boundary checks
+        if (this.x - this.radius < 15) {
+          this.x = this.radius + 15;
           this.vx *= -0.5;
         }
-        if (this.x + this.radius > width - 10) {
-          this.x = width - this.radius - 10;
+        if (this.x + this.radius > width - 15) {
+          this.x = width - this.radius - 15;
           this.vx *= -0.5;
         }
-        if (this.y - this.radius < 10) {
-          this.y = this.radius + 10;
+        if (this.y - this.radius < 15) {
+          this.y = this.radius + 15;
           this.vy *= -0.5;
         }
-        if (this.y + this.radius > height - 10) {
-          this.y = height - this.radius - 10;
+        if (this.y + this.radius > height - 15) {
+          this.y = height - this.radius - 15;
           this.vy *= -0.5;
-        }
-
-        // Cursor Physics: push nodes away
-        const mouse = mouseRef.current;
-        if (mouse.active) {
-          const dxMouse = mouse.x - this.x;
-          const dyMouse = mouse.y - this.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          
-          if (distMouse < this.radius + 120) {
-            // Stronger push when closer
-            const force = (this.radius + 120 - distMouse) / (this.radius + 120);
-            this.vx -= (dxMouse / distMouse) * force * 1.2;
-            this.vy -= (dyMouse / distMouse) * force * 1.2;
-          }
-
-          // Hover detection
-          if (distMouse < this.radius) {
-            this.targetRadius = this.baseRadius * 1.22;
-            this.targetGlow = 1;
-            // Slowly rotate hovered node text
-            this.angle += this.rotSpeed;
-          } else {
-            this.targetRadius = this.baseRadius;
-            this.targetGlow = 0;
-            // Return rotation to zero gently
-            this.angle += (0 - this.angle) * 0.1;
-          }
-        } else {
-          this.targetRadius = this.baseRadius;
-          this.targetGlow = 0;
-          this.angle += (0 - this.angle) * 0.1;
         }
 
         // Lerp animations
-        this.radius += (this.targetRadius - this.radius) * 0.1;
-        this.glow += (this.targetGlow - this.glow) * 0.1;
+        this.radius += (this.targetRadius - this.radius) * 0.15;
+        this.glow += (this.targetGlow - this.glow) * 0.15;
       }
 
       draw() {
@@ -157,7 +175,7 @@ export default function Skills() {
             this.radius * 1.3
           );
           const isLight = document.documentElement.classList.contains("light");
-          radGrad.addColorStop(0, isLight ? `rgba(0, 0, 0, ${0.12 * this.glow})` : `rgba(255, 255, 255, ${0.12 * this.glow})`);
+          radGrad.addColorStop(0, isLight ? `rgba(0, 150, 255, ${0.15 * this.glow})` : `rgba(0, 240, 255, ${0.15 * this.glow})`);
           radGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius * 1.3, 0, Math.PI * 2);
@@ -170,7 +188,7 @@ export default function Skills() {
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         const isLight = document.documentElement.classList.contains("light");
         ctx.fillStyle = isLight ? "rgba(245, 245, 245, 0.9)" : "rgba(10, 10, 10, 0.9)";
-        ctx.strokeStyle = isLight ? `rgba(0, 0, 0, ${0.1 + this.glow * 0.4})` : `rgba(255, 255, 255, ${0.1 + this.glow * 0.4})`;
+        ctx.strokeStyle = isLight ? `rgba(0, 150, 255, ${0.15 + this.glow * 0.5})` : `rgba(0, 240, 255, ${0.15 + this.glow * 0.5})`;
         ctx.lineWidth = this.glow > 0 ? 1.5 : 1;
         ctx.fill();
         ctx.stroke();
@@ -181,7 +199,7 @@ export default function Skills() {
         ctx.rotate(this.angle);
         
         ctx.font = `500 ${window.innerWidth < 768 ? "9px" : "11px"} "Space Grotesk", sans-serif`;
-        ctx.fillStyle = this.glow > 0 ? (isLight ? "#000000" : "#ffffff") : (isLight ? "#555555" : "#d4d4d4");
+        ctx.fillStyle = this.glow > 0 ? (isLight ? "#0096ff" : "#00f0ff") : (isLight ? "#555555" : "#d4d4d4");
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(this.text.toUpperCase(), 0, 0);
@@ -293,9 +311,23 @@ export default function Skills() {
         }
       }
 
+      // Find hovered node
+      let hoveredNode = null;
+      if (mouseRef.current.active) {
+        for (let i = 0; i < nodes.length; i++) {
+          const dx = mouseRef.current.x - nodes[i].x;
+          const dy = mouseRef.current.y - nodes[i].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < nodes[i].radius) {
+            hoveredNode = nodes[i];
+            break;
+          }
+        }
+      }
+
       // Update and draw nodes
       nodes.forEach((n) => {
-        n.update();
+        n.update(hoveredNode, mouseRef.current);
         n.draw();
       });
 
@@ -317,11 +349,11 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative blueprint-grid"
     >
       {/* Title */}
       <div className="flex flex-col gap-2 mb-10">
-        <span className="font-mono text-xs text-neutral-600 tracking-[0.3em] uppercase">
+        <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase">
           [ TECH STACK ]
         </span>
         <h2 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white uppercase leading-none">
@@ -332,27 +364,27 @@ export default function Skills() {
       {/* Physics Container Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center w-full flex-1">
         {/* Left Side: Canvas Ecosystem */}
-        <div className="lg:col-span-8 border border-neutral-900 bg-neutral-950/20 rounded-xl relative overflow-hidden h-[550px] w-full flex items-center justify-center">
-          <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />
+        <div className="lg:col-span-8 border border-neutral-900 bg-neutral-950/40 rounded-xl relative overflow-hidden h-[550px] w-full flex items-center justify-center group hover:border-accent/20 transition-all duration-300">
+          <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full animate-fade-in" />
           
           {/* Subtle instructional card overlays */}
-          <div className="absolute top-4 left-4 font-mono text-[9px] text-neutral-600 tracking-widest uppercase pointer-events-none">
+          <div className="absolute top-4 left-4 font-mono text-[9px] text-neutral-500 tracking-widest uppercase pointer-events-none">
             2D Physics Grid // Elastic Colliders
           </div>
-          <div className="absolute bottom-4 right-4 font-mono text-[9px] text-neutral-500 tracking-widest uppercase pointer-events-none animate-pulse">
-            Pass mouse to push & rotate bubbles
+          <div className="absolute bottom-4 right-4 font-mono text-[9px] text-accent tracking-widest uppercase pointer-events-none animate-pulse">
+            // INTERACTIVE: MOVE CURSOR TO DEFLECT NODES
           </div>
         </div>
 
         {/* Right Side: Hover Detail Info Card */}
-        <div className="lg:col-span-4 flex flex-col gap-6 p-8 border border-neutral-900 bg-neutral-950/40 rounded-xl min-h-[220px] justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/[0.01] rounded-full blur-2xl pointer-events-none" />
+        <div className="lg:col-span-4 flex flex-col gap-6 p-8 border border-neutral-900 hover:border-accent/35 bg-neutral-950/40 rounded-xl min-h-[220px] justify-between relative overflow-hidden transition-all duration-300 group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/[0.01] rounded-full blur-2xl pointer-events-none" />
           
           <div className="flex flex-col gap-2">
-            <span className="font-mono text-[9px] tracking-widest text-neutral-500 uppercase">
-              Selected Node Description
+            <span className="font-mono text-[9px] tracking-widest text-accent uppercase">
+              [ SELECTED NODE SPEC ]
             </span>
-            <h3 className="text-3xl font-display text-white font-medium min-h-[40px] uppercase">
+            <h3 className="text-3xl font-display text-white font-medium min-h-[40px] uppercase group-hover:text-accent transition-colors duration-300">
               {hoveredSkill || "HOVER A NODE"}
             </h3>
           </div>
@@ -381,14 +413,18 @@ export default function Skills() {
           </p>
 
           <div className="border-t border-neutral-900 pt-4 font-mono text-[9px] text-neutral-600 tracking-wider">
-            {hoveredSkill ? "// STATUS: NODE_ACTIVE" : "// STATUS: IDLE"}
+            {hoveredSkill ? (
+              <span>// STATUS: <span className="text-accent">NODE_ACTIVE</span></span>
+            ) : (
+              <span>// STATUS: <span className="text-neutral-500">IDLE_STANDBY</span></span>
+            )}
           </div>
         </div>
       </div>
 
       {/* Footer copyright */}
       <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
-        <span>SKILLS // PHYSICS WEB</span>
+        <span>[SPEC] SKILLS // PHYSICS WEB</span>
         <span>026 // © NITHEESH R</span>
       </div>
     </section>

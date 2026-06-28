@@ -142,19 +142,19 @@ export default function Hero() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex items-center gap-2 border border-white hover:bg-white hover:text-black px-8 py-4 rounded-full transition-all duration-300 overflow-hidden"
+            className="group relative flex items-center gap-2 border border-accent/20 hover:border-accent hover:text-accent px-8 py-4 rounded-full transition-all duration-300 overflow-hidden bg-neutral-950/40"
           >
             <span>DOWNLOAD RESUME</span>
-            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300" />
+            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300 text-accent" />
           </a>
 
           {/* Contact Me Button */}
           <a
             href="#contact"
-            className="group flex items-center gap-2 bg-white text-black hover:bg-transparent hover:text-white border border-white px-8 py-4 rounded-full transition-all duration-300"
+            className="group flex items-center gap-2 bg-accent text-black hover:bg-transparent hover:text-accent border border-accent px-8 py-4 rounded-full transition-all duration-300 font-medium"
           >
             <span>CONTACT ME</span>
-            <span className="w-1.5 h-1.5 bg-current rounded-full group-hover:scale-150 transition-transform duration-300" />
+            <span className="w-1.5 h-1.5 bg-black rounded-full group-hover:bg-accent group-hover:scale-150 transition-all duration-300" />
           </a>
         </motion.div>
       </motion.div>
@@ -170,7 +170,7 @@ export default function Hero() {
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-          className="w-[1px] h-8 bg-neutral-700"
+          className="w-[1px] h-8 bg-accent/40"
         />
       </motion.div>
     </section>

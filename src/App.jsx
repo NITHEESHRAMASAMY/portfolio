@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 
 const About = lazy(() => import("./components/About"));
+const MissionVision = lazy(() => import("./components/MissionVision"));
 const Projects = lazy(() => import("./components/Projects"));
 const Skills = lazy(() => import("./components/Skills"));
 const Experience = lazy(() => import("./components/Experience"));
@@ -72,7 +73,7 @@ export default function App() {
       </AnimatePresence>
 
       {!loading && (
-        <main className="relative bg-black min-h-screen text-white select-none overflow-x-hidden">
+        <main className="relative bg-black min-h-screen text-white select-none overflow-x-hidden blueprint-grid">
           {/* Background Ambient Layers */}
           <div className="noise-overlay" />
           <div className="beam-light-1" />
@@ -87,6 +88,7 @@ export default function App() {
           {/* Below-the-fold content wrapped in Suspense for lazy load optimizations */}
           <Suspense fallback={<SectionFallback />}>
             <About />
+            <MissionVision />
             <Projects />
             <Skills />
             <Experience />
