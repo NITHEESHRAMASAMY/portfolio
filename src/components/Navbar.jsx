@@ -130,7 +130,18 @@ export default function Navbar() {
         className="fixed top-0 left-0 w-full z-40 px-6 py-4 md:px-12 flex items-center justify-between border-b border-white/[0.05] bg-black/40 backdrop-blur-md glass-panel"
       >
         {/* Left Side: Animated Logo */}
-        <a href="#home" className="flex items-center gap-1 group relative">
+        <a href="#home" className="flex items-center gap-2.5 group relative">
+          {/* Circular Avatar Logo */}
+          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/10 group-hover:border-accent/40 transition-colors duration-300 shadow-lg flex-shrink-0">
+            <img
+              src="/developer-coding.png"
+              alt="Logo Avatar"
+              className="w-full h-full object-cover scale-110 object-center transition-transform duration-500 group-hover:scale-125"
+            />
+            {/* Subtle sweeping light shimmer highlight */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+          </div>
+
           <div className="font-display font-semibold text-lg md:text-xl tracking-wider text-white flex overflow-hidden">
             {logoLetters.map((letter, idx) => (
               <motion.span

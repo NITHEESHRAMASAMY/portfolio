@@ -225,7 +225,7 @@ export default function Projects() {
                 rotateX: tilt.y,
               }}
               transition={{ type: "spring", stiffness: 100, damping: 18 }}
-              className="w-full h-full bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden relative shadow-2xl shadow-black"
+              className="w-full h-full bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden relative shadow-2xl shadow-black keep-dark"
             >
               {/* Dynamic visual previews based on active index */}
               <AnimatePresence mode="wait">
