@@ -44,9 +44,38 @@ export default function About() {
     utterance.pitch = 1.0;
 
     const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v => v.lang.includes("en-US") || v.lang.includes("en-GB"));
-    if (voice) {
-      utterance.voice = voice;
+    const englishVoices = voices.filter(v => v.lang.includes("en-US") || v.lang.includes("en-GB") || v.lang.includes("en-IN"));
+    
+    const scoredVoices = englishVoices.map(v => {
+      const name = v.name.toLowerCase();
+      let score = 0;
+      
+      if (name.includes("male")) score += 100;
+      
+      const maleNames = ["david", "daniel", "aaron", "arthur", "gordon", "rishi", "fred", "james", "john", "robert", "michael", "william", "george", "thomas", "mark", "paul", "richard", "joseph", "andrew", "brian", "kevin"];
+      for (const mName of maleNames) {
+        if (name.includes(mName)) {
+          score += 80;
+          break;
+        }
+      }
+      
+      const femaleNames = ["female", "zira", "hazel", "samantha", "susan", "heera", "tessa", "haruka", "moira", "veena", "karen", "mary", "elizabeth", "jennifer", "maria", "linda", "patricia", "barbara", "sarah", "jessica", "katherine", "ashley", "emily", "lisa", "anna", "nicole", "luna", "victoria", "siri", "cortana", "alexa"];
+      for (const fName of femaleNames) {
+        if (name.includes(fName)) {
+          score -= 90;
+          break;
+        }
+      }
+      
+      return { voice: v, score };
+    });
+
+    scoredVoices.sort((a, b) => b.score - a.score);
+
+    const bestVoice = scoredVoices.length > 0 ? scoredVoices[0].voice : null;
+    if (bestVoice) {
+      utterance.voice = bestVoice;
     }
 
     utterance.onstart = () => setIsSpeaking(true);
