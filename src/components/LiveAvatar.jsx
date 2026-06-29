@@ -8,9 +8,10 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
 
   useEffect(() => {
     let loadedCount = 0;
+    const totalImages = 2;
     const onImgLoad = () => {
       loadedCount++;
-      if (loadedCount === 2) {
+      if (loadedCount === totalImages) {
         setImagesLoaded(true);
       }
     };
@@ -36,6 +37,7 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
     const ctx = canvas.getContext("2d");
     let animationId;
     let startTime = Date.now();
+    let speakingStartTime = null;
     
     // Controlled Randomness & Physics Parameters
     let postureTimer = 0;
@@ -87,7 +89,11 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
       // --- 3. DRAW PRIMARY POSES (100% OPAQUE - PREVENTS BLURRY GHOSTING OVERLAPS) ---
       // We draw only one image at a time with 100% opacity. This guarantees the image remains 100% sharp and clear.
       
+      let activeImg = imgCodingRef.current;
+      let talkTime = 0;
+
       if (!isSpeaking) {
+        speakingStartTime = null;
         // IDLE STATE: Coder looking down and typing
         ctx.save();
         // Keyboard typing hands wiggle
@@ -98,6 +104,13 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
         ctx.drawImage(imgCodingRef.current, 0, 0, 400, 400);
         ctx.restore();
       } else {
+        if (!speakingStartTime) {
+          speakingStartTime = Date.now();
+        }
+        talkTime = (Date.now() - speakingStartTime) / 1000;
+
+        activeImg = imgTalkingRef.current;
+
         // TALKING STATE: Presenter looking forward and gesturing
         ctx.save();
         // Pivot head/shoulders centered: cx=200, cy=235
@@ -107,7 +120,7 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
         ctx.rotate(headTilt + headShake);
         ctx.translate(-200, -235);
         
-        ctx.drawImage(imgTalkingRef.current, 0, 0, 400, 400);
+        ctx.drawImage(activeImg, 0, 0, 400, 400);
 
         // --- 4. SEAMLESS CIRCULAR MOUTH OVERLAY (No Rectangular Borders) ---
         // We crop the lips region and draw it within a circular clipping mask centered on the mouth.
@@ -122,11 +135,11 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
         const mouthH = 10 * mouthScale;
         const mouthOffset = (mouthH - 10) / 2;
 
-        const scaleX = imgTalkingRef.current.naturalWidth / 400;
-        const scaleY = imgTalkingRef.current.naturalHeight / 400;
+        const scaleX = activeImg.naturalWidth / 400;
+        const scaleY = activeImg.naturalHeight / 400;
 
         ctx.drawImage(
-          imgTalkingRef.current,
+          activeImg,
           188 * scaleX, 144 * scaleY, 24 * scaleX, 10 * scaleY, // source mouth area
           188, 144 - mouthOffset, 24, mouthH // destination stretched mouth area
         );
@@ -191,6 +204,16 @@ export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
       ctx.font = "6px monospace";
       ctx.fillText(`SYS.STATUS: ${isSpeaking ? "ACTIVE_PRESENTER" : "STANDBY_COMPILE"}`, 25, 45);
       ctx.fillText(`SYS.CPU_UTIL: ${(42 + Math.sin(time * 2.8) * 8).toFixed(1)}%`, 25, 55);
+
+      if (isSpeaking) {
+        let activePhaseName = "GREETING_ATTENTION";
+        if (talkTime >= 9.1) activePhaseName = "CLOSING_CTA";
+        else if (talkTime >= 7.2) activePhaseName = "PERSONAL_CONNECTION";
+        else if (talkTime >= 5.3) activePhaseName = "MAKING_KEY_POINT";
+        else if (talkTime >= 3.4) activePhaseName = "EXPLAINING_PASSION";
+        else if (talkTime >= 1.5) activePhaseName = "INTRODUCING_HIMSELF";
+        ctx.fillText(`SYS.PHASE: ${activePhaseName}`, 25, 65);
+      }
 
       ctx.fillText(`POSTURE: X:${currentPostureX.toFixed(2)} Y:${currentPostureY.toFixed(2)}`, 270, 45);
       ctx.fillText(`FPS: 60.0`, 270, 55);

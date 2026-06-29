@@ -332,7 +332,7 @@ export default function GithubDashboard() {
           {/* Svg/HTML Grid Container */}
           <div className="flex-1 flex flex-col justify-center overflow-x-auto select-none py-6 scrollbar-none">
             <div className="flex gap-[3px] min-w-full">
-              {(contributions || columns).map((colVal, colIdx) => (
+              {(contributions ? [...contributions].reverse() : columns).map((colVal, colIdx) => (
                 <div key={colIdx} className="flex flex-col gap-[3px]">
                   {(contributions ? colVal : rows).map((dayVal, rowIdx) => {
                     const colorClass = contributions

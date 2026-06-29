@@ -5,6 +5,7 @@ import LiveAvatar from "./LiveAvatar";
 export default function About() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [hoveredStoryIdx, setHoveredStoryIdx] = useState(null);
+  const [speechTime, setSpeechTime] = useState(0);
   const hasSpokenRef = useRef(false);
 
   useEffect(() => {
@@ -18,13 +19,28 @@ export default function About() {
     };
   }, []);
 
+  useEffect(() => {
+    let animId;
+    if (isSpeaking) {
+      const startTime = Date.now();
+      const update = () => {
+        setSpeechTime((Date.now() - startTime) / 1000);
+        animId = requestAnimationFrame(update);
+      };
+      animId = requestAnimationFrame(update);
+    } else {
+      setSpeechTime(0);
+    }
+    return () => cancelAnimationFrame(animId);
+  }, [isSpeaking]);
+
   const speak = () => {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-    const text = "Hi, I am Nitheesh. I create products where thoughtful engineering meets purposeful innovation. Welcome to my developer workspace!";
+    const text = "Hi! I'm Nitheesh. I'm a passionate developer. I love building solutions. I focus on clean code. I always enjoy learning. Let's build something amazing together!";
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
+    utterance.rate = 0.95;
     utterance.pitch = 1.0;
 
     const voices = window.speechSynthesis.getVoices();
@@ -38,6 +54,15 @@ export default function About() {
     utterance.onerror = () => setIsSpeaking(false);
 
     window.speechSynthesis.speak(utterance);
+  };
+
+  const getSubtitleText = (time) => {
+    if (time < 1.5) return "Hi! I'm Nitheesh.";
+    if (time < 3.4) return "I'm a passionate developer.";
+    if (time < 5.3) return "I love building solutions...";
+    if (time < 7.2) return "I focus on clean code...";
+    if (time < 9.1) return "I always enjoy learning...";
+    return "Let's build something amazing together!";
   };
 
   const stories = [
@@ -157,7 +182,7 @@ export default function About() {
                   className="absolute -bottom-16 left-4 right-4 bg-neutral-950/95 border border-accent/25 rounded-lg p-3 font-mono text-[9px] text-neutral-300 leading-relaxed text-left keep-dark select-none shadow-2xl z-20"
                 >
                   <span className="text-accent animate-pulse mr-1">&gt; NITHEESH_VOICE:</span>
-                  "Hi, I am Nitheesh. I create products where thoughtful engineering meets purposeful innovation. Welcome to my developer workspace!"
+                  "{getSubtitleText(speechTime)}"
                 </motion.div>
               )}
             </AnimatePresence>
