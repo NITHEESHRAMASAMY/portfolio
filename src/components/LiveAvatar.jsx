@@ -1,285 +1,654 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function LiveAvatar({ isSpeaking, hoveredStoryIdx }) {
-  const canvasRef = useRef(null);
-  const imgCodingRef = useRef(null);
-  const imgTalkingRef = useRef(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+// ─── 6 Phase Definitions ──────────────────────────────────────────────────
+const PHASES = [
+  {
+    start: 0,   end: 1.5,
+    label:   "GREETING & ATTENTION",
+    imgKey:  "wave",
+    motion:  "wave",       // animation profile
+    color:   [0, 240, 255],
+  },
+  {
+    start: 1.5, end: 3.4,
+    label:   "INTRODUCING HIMSELF",
+    imgKey:  "talk",
+    motion:  "talk",
+    color:   [139, 92, 246],
+  },
+  {
+    start: 3.4, end: 5.3,
+    label:   "EXPLAINING PASSION",
+    imgKey:  "passion",
+    motion:  "passion",
+    color:   [20, 184, 166],
+  },
+  {
+    start: 5.3, end: 7.2,
+    label:   "MAKING A KEY POINT",
+    imgKey:  "point",
+    motion:  "point",
+    color:   [245, 158, 11],
+  },
+  {
+    start: 7.2, end: 9.1,
+    label:   "PERSONAL CONNECTION",
+    imgKey:  "sincere",
+    motion:  "sincere",
+    color:   [239, 68, 68],
+  },
+  {
+    start: 9.1, end: 12,
+    label:   "CLOSING & CALL TO ACTION",
+    imgKey:  "thumbsup",
+    motion:  "thumbsup",
+    color:   [0, 240, 255],
+  },
+];
 
-  useEffect(() => {
-    let loadedCount = 0;
-    const totalImages = 2;
-    const onImgLoad = () => {
-      loadedCount++;
-      if (loadedCount === totalImages) {
-        setImagesLoaded(true);
+function getPhase(t) {
+  return PHASES.find((p) => t >= p.start && t < p.end) || PHASES[PHASES.length - 1];
+}
+
+// ─── Multi-frequency organic noise ────────────────────────────────────────
+function noise(t, freq = 1, seed = 0) {
+  return (
+    Math.sin(t * freq * (1.1 + seed * 0.4)) * 0.5 +
+    Math.cos(t * freq * (0.7 + seed * 0.3)) * 0.3 +
+    Math.sin(t * freq * (2.3 + seed * 0.6)) * 0.2
+  );
+}
+
+// ─── Motion profiles: returns {dx, dy, scale, rotation, eyeClose} ────────
+function getMotion(profile, t, speechT) {
+  const base = {
+    dx: 0, dy: 0, scale: 1.0, rotation: 0,
+    headDx: 0, headDy: 0, headScale: 1.0,
+    shoulderBob: 0, breathScale: 1.0,
+    mouthOpen: 0,
+  };
+
+  // Global breathing (always active during speech)
+  const breathCycle = Math.sin(t * 0.9) * 0.5 + Math.sin(t * 1.7) * 0.3;
+  base.breathScale = 1.0 + breathCycle * 0.004;
+  base.dy = breathCycle * 1.8;
+
+  // Mouth openness driven by speech rhythm
+  base.mouthOpen = Math.max(0,
+    Math.sin(t * 14) * 0.6 +
+    Math.sin(t * 8.3) * 0.3 +
+    noise(t, 5, 0.2) * 0.15
+  );
+
+  switch (profile) {
+    case "wave": {
+      // Energetic upper-body bob, cheerful swaying
+      base.headDx = Math.sin(t * 2.8) * 4.5 + noise(t, 1.3, 0.1) * 2;
+      base.headDy = Math.abs(Math.sin(t * 2)) * -3 + breathCycle * 2;
+      base.shoulderBob = Math.sin(t * 3) * 2.5;
+      base.rotation = Math.sin(t * 1.8) * 0.012;
+      // Wave arm bob: The arm image already has wave - we animate scale to mimic arm movement
+      base.scale = base.breathScale + Math.abs(Math.sin(t * 2.5)) * 0.006;
+      break;
+    }
+    case "talk": {
+      // Natural speaking head nods
+      base.headDx = noise(t, 1.1, 0.2) * 3 + Math.sin(t * 1.9) * 2;
+      base.headDy = Math.sin(t * 2.4) * 2.5;
+      base.rotation = noise(t, 0.9, 0.1) * 0.01;
+      base.scale = base.breathScale;
+      // Slight forward lean on emphasis
+      const emphasisT = (t % 1.8) / 1.8;
+      base.dy += Math.sin(emphasisT * Math.PI) * -1.5;
+      break;
+    }
+    case "passion": {
+      // Wide expansive movements - excited body language
+      base.headDx = Math.sin(t * 1.5) * 5 + noise(t, 2, 0.3) * 2;
+      base.headDy = Math.cos(t * 1.8) * 3;
+      base.rotation = Math.sin(t * 1.2) * 0.015;
+      base.shoulderBob = Math.sin(t * 2.2) * 3.5;
+      base.scale = base.breathScale + Math.abs(Math.sin(t * 1.8)) * 0.008;
+      base.dy += Math.sin(t * 2.2) * 2;
+      break;
+    }
+    case "point": {
+      // Sharp confident movements, slight forward emphasis
+      base.headDx = noise(t, 1.4, 0.05) * 2.5;
+      base.headDy = Math.sin(t * 2.1) * 2 + noise(t, 3, 0.2) * 0.8;
+      base.rotation = noise(t, 0.8, 0.15) * 0.009;
+      // Rhythmic pointing pulse - slight scale beat
+      base.scale = base.breathScale + (Math.sin(t * 3.5) > 0.6 ? 0.005 : 0);
+      break;
+    }
+    case "sincere": {
+      // Slow calm gentle swaying
+      base.headDx = Math.sin(t * 0.9) * 2 + noise(t, 0.6, 0.1) * 1.5;
+      base.headDy = Math.sin(t * 1.1) * 1.5;
+      base.rotation = Math.sin(t * 0.7) * 0.008;
+      base.scale = base.breathScale + Math.sin(t * 1.2) * 0.003;
+      // Eyes close periodically (sincere phase has eyes closed in image already)
+      base.dy += Math.sin(t * 0.9) * 1.5;
+      break;
+    }
+    case "thumbsup": {
+      // Bouncy, celebratory energy
+      const bounce = Math.abs(Math.sin(t * 3.5));
+      base.headDy = bounce * -4 + breathCycle * 1.5;
+      base.headDx = Math.sin(t * 2.2) * 3;
+      base.shoulderBob = bounce * 3;
+      base.scale = base.breathScale + bounce * 0.01;
+      base.rotation = Math.sin(t * 2.2) * 0.01;
+      base.dy += bounce * -2;
+      break;
+    }
+    default:
+      break;
+  }
+  return base;
+}
+
+// ─── Blink state machine ──────────────────────────────────────────────────
+class BlinkController {
+  constructor() {
+    this.state = "open";    // open | closing | closed | opening
+    this.progress = 0;      // 0=open, 1=closed
+    this.nextBlink = 2 + Math.random() * 3; // seconds until next blink
+    this.elapsed = 0;
+  }
+  update(dt) {
+    this.elapsed += dt;
+    if (this.state === "open" && this.elapsed >= this.nextBlink) {
+      this.state = "closing";
+      this.elapsed = 0;
+    }
+    if (this.state === "closing") {
+      this.progress = Math.min(1, this.progress + dt * 10); // 100ms to close
+      if (this.progress >= 1) { this.state = "closed"; this.elapsed = 0; }
+    }
+    if (this.state === "closed") {
+      if (this.elapsed > 0.08) { this.state = "opening"; } // hold 80ms
+    }
+    if (this.state === "opening") {
+      this.progress = Math.max(0, this.progress - dt * 8); // 125ms to open
+      if (this.progress <= 0) {
+        this.state = "open";
+        this.elapsed = 0;
+        this.nextBlink = 2.5 + Math.random() * 3.5;
       }
-    };
+    }
+    return this.progress; // 0=open, 1=fully closed
+  }
+}
 
-    const imgCoding = new Image();
-    imgCoding.src = "/developer-coding.png";
-    imgCoding.onload = () => {
-      imgCodingRef.current = imgCoding;
-      onImgLoad();
-    };
+// ─── Canvas drawing helpers ───────────────────────────────────────────────
+function drawImageAnimated(ctx, img, W, H, motion, t) {
+  if (!img) return;
+  const { dx, dy, scale, rotation, headDx, headDy, breathScale } = motion;
 
-    const imgTalking = new Image();
-    imgTalking.src = "/developer-talking.png";
-    imgTalking.onload = () => {
-      imgTalkingRef.current = imgTalking;
-      onImgLoad();
+  // Ken Burns: slow creep zoom on the whole frame
+  const kb = 1.0 + Math.sin(t * 0.12) * 0.015;
+
+  ctx.save();
+  ctx.translate(W / 2, H / 2);
+  ctx.scale(scale * kb * breathScale, scale * kb * breathScale);
+  ctx.rotate(rotation);
+  ctx.translate(dx + headDx * 0.3, dy + headDy * 0.3);
+  ctx.translate(-W / 2, -H / 2);
+
+  ctx.drawImage(img, 0, 0, W, H);
+  ctx.restore();
+}
+
+function drawBlinkOverlay(ctx, img, W, H, blinkProgress, motion) {
+  if (!img || blinkProgress <= 0) return;
+  const { dx, dy, scale, rotation, headDx, headDy } = motion;
+
+  ctx.save();
+  ctx.translate(W / 2 + dx + headDx * 0.3, H / 2 + dy + headDy * 0.3);
+  ctx.scale(scale, scale);
+  ctx.rotate(rotation);
+  ctx.translate(-W / 2, -H / 2);
+
+  // Eyelid skin tone blend
+  ctx.fillStyle = "rgba(48, 30, 20, 0.96)";
+
+  const ly = 124;
+  const lx = 174;
+  const rx = 226;
+  const rX = 11;
+  const rY = 7 * blinkProgress;
+
+  // Left eye lid
+  ctx.beginPath();
+  ctx.ellipse(lx, ly - 7 + rY, rX, rY, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Right eye lid
+  ctx.beginPath();
+  ctx.ellipse(rx, ly - 7 + rY, rX, rY, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawMouthAnimation(ctx, img, W, H, mouthOpen, motion) {
+  if (!img || mouthOpen <= 0) return;
+
+  const mX = 200, mY = 153;
+  const mRX = 13, mRY = 6;
+
+  ctx.save();
+  ctx.translate(W / 2 + motion.dx + motion.headDx * 0.3, H / 2 + motion.dy + motion.headDy * 0.3);
+  ctx.scale(motion.scale * motion.breathScale, motion.scale * motion.breathScale);
+  ctx.rotate(motion.rotation);
+  ctx.translate(-W / 2, -H / 2);
+
+  const scaleX = img.naturalWidth  / W;
+  const scaleY = img.naturalHeight / H;
+
+  // Source mouth crop from image
+  const srcX = (mX - mRX) * scaleX;
+  const srcY = (mY - mRY) * scaleY;
+  const srcW = (mRX * 2) * scaleX;
+  const srcH = (mRY * 2) * scaleY;
+
+  // Dest mouth stretch
+  const destX = mX - mRX;
+  const destY = mY - mRY - (mouthOpen * 2.5);
+  const destW = mRX * 2;
+  const destH = mRY * 2 + (mouthOpen * 5);
+
+  // Clip to ellipse to blend naturally
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(mX, mY, mRX * 1.1, mRY * 1.4 * (1 + mouthOpen * 0.4), 0, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
+  ctx.restore();
+
+  ctx.restore();
+}
+
+// ─── Voice waveform bars ─────────────────────────────────────────────────
+function drawVoiceWave(ctx, W, H, t, color) {
+  const [r, g, b] = color;
+  ctx.save();
+  ctx.translate(W / 2, H * 0.875);
+  const bars = 13;
+  const bW = 3, gap = 2.5;
+  const totalW = bars * bW + (bars - 1) * gap;
+  const startX = -totalW / 2;
+  for (let i = 0; i < bars; i++) {
+    const center = (i - (bars - 1) / 2) / ((bars - 1) / 2);
+    const env = 1 - Math.abs(center) * 0.35;
+    const h = (3 + Math.abs(Math.sin(t * 13 + i * 0.65)) * 16 + noise(t, 6, i * 0.3) * 4) * env;
+    const x = startX + i * (bW + gap);
+    const alpha = 0.6 + env * 0.4;
+    ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+    ctx.lineWidth = bW;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x + bW / 2, -h / 2);
+    ctx.lineTo(x + bW / 2, h / 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ─── Phase progress bar ──────────────────────────────────────────────────
+function drawProgressBar(ctx, W, H, phase, speechT, color) {
+  const [r, g, b] = color;
+  const barY = H - 6;
+  const barX = 12;
+  const barW = W - 24;
+  const phaseDur = phase.end - phase.start;
+  const phaseFill = Math.min(1, (speechT - phase.start) / phaseDur);
+  const totalFill = Math.min(1, speechT / 11);
+
+  // Total progress (dim)
+  ctx.fillStyle = `rgba(${r},${g},${b},0.15)`;
+  ctx.fillRect(barX, barY, barW, 2);
+  // Phase progress (bright)
+  const grad = ctx.createLinearGradient(barX, 0, barX + barW * phaseFill, 0);
+  grad.addColorStop(0, `rgba(${r},${g},${b},0.9)`);
+  grad.addColorStop(1, `rgba(${r},${g},${b},0.5)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(barX, barY, barW * phaseFill, 2);
+
+  // Small dot at current position
+  ctx.beginPath();
+  ctx.arc(barX + barW * phaseFill, barY + 1, 3, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(${r},${g},${b},1)`;
+  ctx.fill();
+}
+
+// ─── Ambient glow overlay ─────────────────────────────────────────────────
+function drawAmbientGlow(ctx, W, H, t, color) {
+  const [r, g, b] = color;
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  // Dynamic glow orb following "energy" of speech
+  const gX = W * (0.5 + Math.sin(t * 0.5) * 0.12);
+  const gY = H * (0.35 + Math.cos(t * 0.4) * 0.08);
+  const gR = 120 + Math.sin(t * 1.2) * 25;
+  const g1 = ctx.createRadialGradient(gX, gY, 0, gX, gY, gR);
+  g1.addColorStop(0, `rgba(${r},${g},${b},0.18)`);
+  g1.addColorStop(0.5, `rgba(${r},${g},${b},0.07)`);
+  g1.addColorStop(1, `rgba(0,0,0,0)`);
+  ctx.fillStyle = g1;
+  ctx.beginPath();
+  ctx.arc(gX, gY, gR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Secondary ambient
+  const g2X = W * 0.75 + Math.cos(t * 0.3) * 20;
+  const g2Y = H * 0.6 + Math.sin(t * 0.6) * 15;
+  const g2 = ctx.createRadialGradient(g2X, g2Y, 0, g2X, g2Y, 90);
+  g2.addColorStop(0, `rgba(${r},${g},${b},0.1)`);
+  g2.addColorStop(1, `rgba(0,0,0,0)`);
+  ctx.fillStyle = g2;
+  ctx.beginPath();
+  ctx.arc(g2X, g2Y, 90, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// ─── HUD labels ──────────────────────────────────────────────────────────
+function drawHUD(ctx, isSpeaking, phase, speechT, t, color) {
+  if (!isSpeaking) return;
+  const [r, g, b] = color;
+  ctx.fillStyle = `rgba(${r},${g},${b},0.4)`;
+  ctx.font = "6px monospace";
+  ctx.fillText(`● ${phase.label}`, 12, 18);
+  ctx.fillStyle = `rgba(${r},${g},${b},0.25)`;
+  ctx.fillText(`T+${speechT.toFixed(1)}s  FPS:60`, 12, 27);
+}
+
+// ─── Scan line ───────────────────────────────────────────────────────────
+let scanLineY = 0;
+function drawScanLine(ctx, W, H) {
+  scanLineY = (scanLineY + 1.2) % H;
+  ctx.strokeStyle = "rgba(0,240,255,0.07)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, scanLineY);
+  ctx.lineTo(W, scanLineY);
+  ctx.stroke();
+}
+
+// ─── Cross-fade manager ──────────────────────────────────────────────────
+class CrossFader {
+  constructor() {
+    this.alpha = 1.0;
+    this.prevImg = null;
+    this.curPhaseIdx = -1;
+  }
+  update(imgs, isSpeaking, phase, PHASES) {
+    const newIdx = isSpeaking ? PHASES.indexOf(phase) : -99;
+    if (newIdx !== this.curPhaseIdx) {
+      // Get old image
+      if (this.curPhaseIdx === -99 || this.curPhaseIdx === -1) {
+        this.prevImg = imgs.coding || null;
+      } else if (PHASES[this.curPhaseIdx]) {
+        this.prevImg = imgs[PHASES[this.curPhaseIdx].imgKey] || null;
+      }
+      this.curPhaseIdx = newIdx;
+      this.alpha = 0.0;  // Reset: new image starts at 0 opacity
+    }
+    if (this.alpha < 1.0) this.alpha = Math.min(1.0, this.alpha + 0.04);
+    return { prevImg: this.prevImg, alpha: this.alpha };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+export default function LiveAvatar({ isSpeaking, hoveredStoryIdx, speechTime = 0 }) {
+  const canvasRef    = useRef(null);
+  const imgsRef      = useRef({});
+  const [loaded, setLoaded] = useState(false);
+
+  // ── Load all images ──────────────────────────────────────────────────
+  useEffect(() => {
+    const sources = {
+      coding:   "/developer-coding.png",
+      wave:     "/developer-character.png",
+      talk:     "/developer-talking.png",
+      passion:  "/developer-passion.png",
+      point:    "/developer-pointing.png",
+      sincere:  "/developer-sincere.png",
+      thumbsup: "/developer-thumbsup.png",
+      talkAlt:  "/developer-talking-alt.png",
     };
+    let n = 0;
+    const total = Object.keys(sources).length;
+    Object.entries(sources).forEach(([key, src]) => {
+      const img = new Image();
+      img.onload  = () => { imgsRef.current[key] = img; if (++n === total) setLoaded(true); };
+      img.onerror = () => { if (++n === total) setLoaded(true); };
+      img.src = src;
+    });
   }, []);
 
+  // ── Sync refs to avoid breaking the canvas loop when props change ──────
+  const speechTimeRef = useRef(speechTime);
+  const isSpeakingRef = useRef(isSpeaking);
+  const hoveredStoryIdxRef = useRef(hoveredStoryIdx);
+
   useEffect(() => {
-    if (!imagesLoaded) return;
+    speechTimeRef.current = speechTime;
+  }, [speechTime]);
+
+  useEffect(() => {
+    isSpeakingRef.current = isSpeaking;
+  }, [isSpeaking]);
+
+  useEffect(() => {
+    hoveredStoryIdxRef.current = hoveredStoryIdx;
+  }, [hoveredStoryIdx]);
+
+  // ── Render loop ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!loaded) return;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    let animationId;
-    let startTime = Date.now();
-    let speakingStartTime = null;
-    
-    // Controlled Randomness & Physics Parameters
-    let postureTimer = 0;
-    let currentPostureX = 0;
-    let currentPostureY = 0;
-    let targetPostureX = 0;
-    let targetPostureY = 0;
+    const ctx    = canvas.getContext("2d");
+    const W = 400, H = 400;
+    let animId;
+    let lastTs   = 0;
+    const globalStart = Date.now();
+    const blink  = new BlinkController();
+    const fader  = new CrossFader();
 
-    let scanY = 0;
+    const render = (ts) => {
+      if (!lastTs) lastTs = ts;
+      const dt = Math.min((ts - lastTs) / 1000, 0.05);
+      lastTs = ts;
+      const gt = (Date.now() - globalStart) / 1000;  // global time
 
-    // Multi-frequency noise function for organic movements
-    const getOrganicNoise = (t, seed) => {
-      return (
-        Math.sin(t * (1.2 + seed)) * 0.5 +
-        Math.cos(t * (0.7 - seed)) * 0.35 +
-        Math.sin(t * (2.5 + seed * 2)) * 0.15
-      );
-    };
+      ctx.clearRect(0, 0, W, H);
 
-    const render = () => {
-      const time = (Date.now() - startTime) / 1000;
-      
-      // Clear canvas
-      ctx.clearRect(0, 0, 400, 400);
+      const imgs = imgsRef.current;
+      const curSpeaking = isSpeakingRef.current;
+      const curSpeechTime = speechTimeRef.current;
+      const curHoveredStoryIdx = hoveredStoryIdxRef.current;
 
-      // 1. Natural Sitting Posture Weight-Shifting (every 6-10s)
-      postureTimer += 16.7;
-      if (postureTimer > 7000 + Math.random() * 4000) {
-        targetPostureX = (Math.random() - 0.5) * 5; 
-        targetPostureY = (Math.random() - 0.5) * 3; 
-        postureTimer = 0;
-      }
-      currentPostureX += (targetPostureX - currentPostureX) * 0.02;
-      currentPostureY += (targetPostureY - currentPostureY) * 0.02;
+      // Current phase and image
+      const phase    = curSpeaking ? getPhase(curSpeechTime) : null;
+      const curImg   = curSpeaking ? (imgs[phase.imgKey] || imgs.talk) : imgs.coding;
+      const color    = curSpeaking ? phase.color : [100, 100, 120];
+      const profile  = curSpeaking ? phase.motion : "idle";
+      const motion   = getMotion(profile, gt, curSpeechTime);
 
-      // 2. Breathing sway
-      const breathingDepth = 2.0 + Math.sin(time * 0.25) * 0.6;
-      const bodySwayY = getOrganicNoise(time * 1.3, 0.1) * breathingDepth + currentPostureY;
-      const bodySwayX = getOrganicNoise(time * 0.65, 0.45) * 1.5 + currentPostureX;
+      // Cross-fade
+      const { prevImg, alpha } = fader.update(imgs, curSpeaking, phase, PHASES);
 
+      // Blink
+      const blinkP = blink.update(dt);
+
+      // ── Outer body sway ──
       ctx.save();
-      ctx.translate(bodySwayX, bodySwayY);
+      if (curHoveredStoryIdx !== null) ctx.translate(4, -2);
 
-      // Leans toward stories on hover
-      if (hoveredStoryIdx !== null) {
-        ctx.translate(6, -2);
-      }
-
-      // --- 3. DRAW PRIMARY POSES (100% OPAQUE - PREVENTS BLURRY GHOSTING OVERLAPS) ---
-      // We draw only one image at a time with 100% opacity. This guarantees the image remains 100% sharp and clear.
-      
-      let activeImg = imgCodingRef.current;
-      let talkTime = 0;
-
-      if (!isSpeaking) {
-        speakingStartTime = null;
-        // IDLE STATE: Coder looking down and typing
+      // ── Draw previous (fading out) ──
+      if (prevImg && alpha < 1.0) {
         ctx.save();
-        // Keyboard typing hands wiggle
-        const typingX = (Math.random() - 0.5) * 0.65;
-        const typingY = (Math.random() - 0.5) * 0.65;
-        ctx.translate(typingX, typingY);
-        
-        ctx.drawImage(imgCodingRef.current, 0, 0, 400, 400);
+        ctx.globalAlpha = 1.0 - alpha;
+        // Previous image with minimal motion
+        ctx.translate(W / 2, H / 2);
+        ctx.scale(1.0, 1.0);
+        ctx.translate(-W / 2, -H / 2);
+        ctx.drawImage(prevImg, 0, 0, W, H);
         ctx.restore();
-      } else {
-        if (!speakingStartTime) {
-          speakingStartTime = Date.now();
-        }
-        talkTime = (Date.now() - speakingStartTime) / 1000;
-
-        activeImg = imgTalkingRef.current;
-
-        // TALKING STATE: Presenter looking forward and gesturing
-        ctx.save();
-        // Pivot head/shoulders centered: cx=200, cy=235
-        ctx.translate(200, 235);
-        const headTilt = getOrganicNoise(time * 1.8, 0.15) * 0.012;
-        const headShake = getOrganicNoise(time * 0.8, 0.6) * 0.009;
-        ctx.rotate(headTilt + headShake);
-        ctx.translate(-200, -235);
-        
-        ctx.drawImage(activeImg, 0, 0, 400, 400);
-
-        // --- 4. SEAMLESS CIRCULAR MOUTH OVERLAY (No Rectangular Borders) ---
-        // We crop the lips region and draw it within a circular clipping mask centered on the mouth.
-        // This ensures the edges blend perfectly with his mustache and chin beard.
-        ctx.save();
-        ctx.beginPath();
-        // Circular clip path centered directly over the lips: x=200, y=149, radius=12
-        ctx.arc(200, 149, 12, 0, 2 * Math.PI);
-        ctx.clip();
-
-        const mouthScale = 1.0 + Math.sin(time * 18) * 0.28;
-        const mouthH = 10 * mouthScale;
-        const mouthOffset = (mouthH - 10) / 2;
-
-        const scaleX = activeImg.naturalWidth / 400;
-        const scaleY = activeImg.naturalHeight / 400;
-
-        ctx.drawImage(
-          activeImg,
-          188 * scaleX, 144 * scaleY, 24 * scaleX, 10 * scaleY, // source mouth area
-          188, 144 - mouthOffset, 24, mouthH // destination stretched mouth area
-        );
-        ctx.restore(); // restore circular mouth clip
-
-        ctx.restore(); // restore talking state head translate
       }
 
-      // --- 5. UNIQUE AMBIENT LIQUID PLASMA BACKGROUND OVERLAY ---
+      // ── Draw current image (animated) ──
       ctx.save();
-      ctx.globalCompositeOperation = "screen";
-
-      // Nebula 1: Moving Purple Aurora (top-left)
-      const n1X = 60 + Math.sin(time * 0.5) * 40;
-      const n1Y = 70 + Math.cos(time * 0.6) * 30;
-      const g1 = ctx.createRadialGradient(n1X, n1Y, 0, n1X, n1Y, 160);
-      g1.addColorStop(0, "rgba(139, 92, 246, 0.28)");
-      g1.addColorStop(0.5, "rgba(99, 102, 241, 0.12)");
-      g1.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g1;
-      ctx.beginPath();
-      ctx.arc(n1X, n1Y, 160, 0, 2 * Math.PI);
-      ctx.fill();
-
-      // Nebula 2: Moving Emerald/Teal Aurora (top-right)
-      const n2X = 340 + Math.cos(time * 0.4) * 30;
-      const n2Y = 80 + Math.sin(time * 0.5) * 40;
-      const g2 = ctx.createRadialGradient(n2X, n2Y, 0, n2X, n2Y, 180);
-      g2.addColorStop(0, "rgba(20, 184, 166, 0.24)");
-      g2.addColorStop(0.5, "rgba(6, 182, 212, 0.1)");
-      g2.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g2;
-      ctx.beginPath();
-      ctx.arc(n2X, n2Y, 180, 0, 2 * Math.PI);
-      ctx.fill();
-
-      // Nebula 3: Moving Gold Accent Flare (upper center)
-      const n3X = 200 + Math.sin(time * 0.7) * 50;
-      const n3Y = 60 + Math.cos(time * 0.5) * 20;
-      const g3 = ctx.createRadialGradient(n3X, n3Y, 0, n3X, n3Y, 130);
-      g3.addColorStop(0, "rgba(245, 158, 11, 0.18)");
-      g3.addColorStop(0.6, "rgba(217, 70, 239, 0.05)");
-      g3.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g3;
-      ctx.beginPath();
-      ctx.arc(n3X, n3Y, 130, 0, 2 * Math.PI);
-      ctx.fill();
-
+      ctx.globalAlpha = alpha;
+      drawImageAnimated(ctx, curImg, W, H, motion, gt);
       ctx.restore();
 
-      // Laser scanner sweep grid line
-      scanY = (scanY + 1.2) % 400;
-      ctx.strokeStyle = "rgba(0, 240, 255, 0.12)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(10, scanY);
-      ctx.lineTo(390, scanY);
-      ctx.stroke();
+      ctx.globalAlpha = 1.0;
 
-      // Corners System text HUD logs
-      ctx.fillStyle = "rgba(0, 240, 255, 0.35)";
-      ctx.font = "6px monospace";
-      ctx.fillText(`SYS.STATUS: ${isSpeaking ? "ACTIVE_PRESENTER" : "STANDBY_COMPILE"}`, 25, 45);
-      ctx.fillText(`SYS.CPU_UTIL: ${(42 + Math.sin(time * 2.8) * 8).toFixed(1)}%`, 25, 55);
-
-      if (isSpeaking) {
-        let activePhaseName = "GREETING_ATTENTION";
-        if (talkTime >= 9.1) activePhaseName = "CLOSING_CTA";
-        else if (talkTime >= 7.2) activePhaseName = "PERSONAL_CONNECTION";
-        else if (talkTime >= 5.3) activePhaseName = "MAKING_KEY_POINT";
-        else if (talkTime >= 3.4) activePhaseName = "EXPLAINING_PASSION";
-        else if (talkTime >= 1.5) activePhaseName = "INTRODUCING_HIMSELF";
-        ctx.fillText(`SYS.PHASE: ${activePhaseName}`, 25, 65);
+      // ── Blink overlay ──
+      if (blinkP > 0 && curImg) {
+        drawBlinkOverlay(ctx, curImg, W, H, blinkP, motion);
       }
 
-      ctx.fillText(`POSTURE: X:${currentPostureX.toFixed(2)} Y:${currentPostureY.toFixed(2)}`, 270, 45);
-      ctx.fillText(`FPS: 60.0`, 270, 55);
-
-      // --- 6. SPEECH HUD OVERLAYS ---
-      ctx.save();
-      if (isSpeaking) {
-        ctx.translate(200, 235);
-        const headTilt = getOrganicNoise(time * 1.8, 0.15) * 0.012;
-        const headShake = getOrganicNoise(time * 0.8, 0.6) * 0.009;
-        ctx.rotate(headTilt + headShake);
-        ctx.translate(-200, -235);
-      }
-
-      // Speaking voice wave overlay at bottom (pulsing indicator)
-      if (isSpeaking) {
+      // ── Mouth animation during speech ──
+      if (curSpeaking && curImg && motion.mouthOpen > 0) {
         ctx.save();
-        ctx.translate(200, 340);
-        ctx.strokeStyle = "#00f0ff";
-        ctx.lineWidth = 1.5;
-        const waveBars = 9;
-        const barWidth = 3;
-        const gap = 3;
-        const totalW = waveBars * barWidth + (waveBars - 1) * gap;
-        const startX = -totalW / 2;
-
-        const speechEnvelope = Math.sin(time * 3) > 0.88 ? 0.05 : 1.0;
-
-        for (let i = 0; i < waveBars; i++) {
-          const h = (4 + Math.abs(Math.sin(time * 18 + i * 0.8)) * 14) * speechEnvelope;
-          const x = startX + i * (barWidth + gap);
-          ctx.beginPath();
-          ctx.moveTo(x, -h / 2);
-          ctx.lineTo(x, h / 2);
-          ctx.stroke();
-        }
+        ctx.globalAlpha = alpha * 0.9;
+        drawMouthAnimation(ctx, curImg, W, H, motion.mouthOpen, motion);
         ctx.restore();
       }
 
-      ctx.restore(); // Head group/face overlay restore
+      // ── Phase transition flash ──
+      if (curSpeaking && alpha < 0.15) {
+        const [r, g, b] = color;
+        ctx.save();
+        ctx.globalAlpha = (0.15 - alpha) * 4 * 0.12;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
 
-      // Laptop terminal flickering reflection on table
-      const glowAlpha = 0.05 + getOrganicNoise(time * 8, 0.9) * 0.025;
-      ctx.fillStyle = `rgba(0, 240, 255, ${glowAlpha})`;
-      ctx.beginPath();
-      ctx.ellipse(200, 310, 80, 15, 0, 0, 2 * Math.PI);
-      ctx.fill();
+      // ── Ambient glow ──
+      if (curSpeaking) {
+        drawAmbientGlow(ctx, W, H, gt, color);
+      }
 
-      ctx.restore(); // Body group restore
+      // ── Scan line ──
+      drawScanLine(ctx, W, H);
 
-      animationId = requestAnimationFrame(render);
+      // ── Voice waveform ──
+      if (curSpeaking) {
+        drawVoiceWave(ctx, W, H, gt, color);
+      }
+
+      // ── Progress bar ──
+      if (curSpeaking && phase) {
+        drawProgressBar(ctx, W, H, phase, curSpeechTime, color);
+      }
+
+      // ── HUD ──
+      if (curSpeaking && phase) {
+        drawHUD(ctx, curSpeaking, phase, curSpeechTime, gt, color);
+      }
+
+      // ── Laptop desk glow (idle) ──
+      if (!curSpeaking) {
+        const gA = 0.045 + noise(gt, 8, 0.9) * 0.02;
+        ctx.fillStyle = `rgba(0,200,255,${gA})`;
+        ctx.beginPath();
+        ctx.ellipse(200, 312, 75, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore(); // outer body sway
+
+      animId = requestAnimationFrame(render);
     };
 
-    render();
+    animId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(animId);
+  }, [loaded]);
 
-    return () => cancelAnimationFrame(animationId);
-  }, [imagesLoaded, isSpeaking, hoveredStoryIdx]);
+  // ── Phase label (HTML badge above canvas) ────────────────────────────
+  const phase = isSpeaking ? getPhase(speechTime) : null;
+  const [r, g, b] = phase ? phase.color : [100, 100, 120];
 
   return (
-    <div className="w-full h-full flex items-center justify-center bg-neutral-950">
+    <div className="w-full h-full flex items-center justify-center bg-neutral-950 relative overflow-hidden">
+      {/* Loading shimmer */}
+      {!loaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div style={{
+            width: 48, height: 48, borderRadius: "50%",
+            border: "2px solid rgba(0,240,255,0.15)",
+            borderTop: "2px solid rgba(0,240,255,0.7)",
+            animation: "spin 1s linear infinite",
+          }} />
+        </div>
+      )}
+
       <canvas
         ref={canvasRef}
         width={400}
         height={400}
         className="w-full h-full object-cover"
+        style={{ display: loaded ? "block" : "none" }}
       />
+
+      {/* Live phase badge */}
+      {isSpeaking && phase && (
+        <div
+          className="absolute top-2 left-2 right-2 flex items-center gap-1.5 pointer-events-none"
+          style={{ zIndex: 10 }}
+        >
+          <div
+            key={phase.label}
+            style={{
+              fontFamily: "monospace",
+              fontSize: "7px",
+              letterSpacing: "0.18em",
+              color: `rgb(${r},${g},${b})`,
+              background: "rgba(0,0,0,0.6)",
+              border: `1px solid rgba(${r},${g},${b},0.35)`,
+              borderRadius: "3px",
+              padding: "3px 8px",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              animation: "phaseBadgeIn 0.35s ease forwards",
+            }}
+          >
+            <span style={{
+              width: 5, height: 5, borderRadius: "50%",
+              background: `rgb(${r},${g},${b})`,
+              display: "inline-block",
+              animation: "pulse 1s ease-in-out infinite",
+            }} />
+            {phase.label}
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes phaseBadgeIn {
+          from { opacity: 0; transform: translateY(-6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.5; transform: scale(0.75); }
+        }
+      `}</style>
     </div>
   );
 }

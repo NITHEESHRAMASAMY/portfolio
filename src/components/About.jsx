@@ -8,9 +8,17 @@ export default function About() {
   const [speechTime, setSpeechTime] = useState(0);
   const hasSpokenRef = useRef(false);
 
+  const [voices, setVoices] = useState([]);
+
   useEffect(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.getVoices();
+      const updateVoices = () => {
+        setVoices(window.speechSynthesis.getVoices());
+      };
+      updateVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = updateVoices;
+      }
     }
     return () => {
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -43,8 +51,8 @@ export default function About() {
     utterance.rate = 0.95;
     utterance.pitch = 1.0;
 
-    const voices = window.speechSynthesis.getVoices();
-    const englishVoices = voices.filter(v => v.lang.includes("en-US") || v.lang.includes("en-GB") || v.lang.includes("en-IN"));
+    const allVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+    const englishVoices = allVoices.filter(v => v.lang.includes("en-US") || v.lang.includes("en-GB") || v.lang.includes("en-IN") || v.lang.includes("en-AU"));
     
     const scoredVoices = englishVoices.map(v => {
       const name = v.name.toLowerCase();
@@ -52,7 +60,14 @@ export default function About() {
       
       if (name.includes("male")) score += 100;
       
-      const maleNames = ["david", "daniel", "aaron", "arthur", "gordon", "rishi", "fred", "james", "john", "robert", "michael", "william", "george", "thomas", "mark", "paul", "richard", "joseph", "andrew", "brian", "kevin"];
+      const maleNames = [
+        "david", "daniel", "aaron", "arthur", "gordon", "rishi", "fred", 
+        "james", "john", "robert", "michael", "william", "george", "thomas", 
+        "mark", "paul", "richard", "joseph", "andrew", "brian", "kevin", "ravi",
+        "mohammad", "karthik", "prabhat", "siri voice 1", "siri voice 3", 
+        "google us english 2", "google us english 4", "google uk english 2", 
+        "google uk english 4", "google en-in 2", "google en-in 4", "oliver", "harry"
+      ];
       for (const mName of maleNames) {
         if (name.includes(mName)) {
           score += 80;
@@ -60,7 +75,15 @@ export default function About() {
         }
       }
       
-      const femaleNames = ["female", "zira", "hazel", "samantha", "susan", "heera", "tessa", "haruka", "moira", "veena", "karen", "mary", "elizabeth", "jennifer", "maria", "linda", "patricia", "barbara", "sarah", "jessica", "katherine", "ashley", "emily", "lisa", "anna", "nicole", "luna", "victoria", "siri", "cortana", "alexa"];
+      const femaleNames = [
+        "female", "zira", "hazel", "samantha", "susan", "heera", "tessa", 
+        "haruka", "moira", "veena", "karen", "mary", "elizabeth", "jennifer", 
+        "maria", "linda", "patricia", "barbara", "sarah", "jessica", "katherine", 
+        "ashley", "emily", "lisa", "anna", "nicole", "luna", "victoria", "siri", 
+        "cortana", "alexa", "siri voice 2", "siri voice 4", "google us english 1", 
+        "google us english 3", "google uk english 1", "google uk english 3", 
+        "google en-in 1", "google en-in 3"
+      ];
       for (const fName of femaleNames) {
         if (name.includes(fName)) {
           score -= 90;
@@ -187,7 +210,7 @@ export default function About() {
               className="relative w-full h-full bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer liquid-profile-blob shadow-2xl transition-transform duration-500"
             >
               {/* HTML5 Canvas Live Avatar Puppeteer (Blinking, talking, and swaying on a single CGI photo) */}
-              <LiveAvatar isSpeaking={isSpeaking} hoveredStoryIdx={hoveredStoryIdx} />
+              <LiveAvatar isSpeaking={isSpeaking} hoveredStoryIdx={hoveredStoryIdx} speechTime={speechTime} />
               
               {/* Dark glass overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-40 transition-opacity duration-500 pointer-events-none" />
