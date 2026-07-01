@@ -66,7 +66,12 @@ export default function About() {
         "mark", "paul", "richard", "joseph", "andrew", "brian", "kevin", "ravi",
         "mohammad", "karthik", "prabhat", "siri voice 1", "siri voice 3", 
         "google us english 2", "google us english 4", "google uk english 2", 
-        "google uk english 4", "google en-in 2", "google en-in 4", "oliver", "harry"
+        "google uk english 4", "google en-in 2", "google en-in 4", "oliver", "harry",
+        // Google TTS Android male voice sub-tags
+        "iom", "tpf", "tpd", "ahp", "gnd", "cxx", "gbd", "gbb", "rjs", "end", "ene",
+        "wavenet-b", "wavenet-c", "wavenet-d", "wavenet-j",
+        "standard-b", "standard-c", "standard-d", "standard-j",
+        "neural2-b", "neural2-c", "neural2-d", "neural2-j"
       ];
       for (const mName of maleNames) {
         if (name.includes(mName)) {
@@ -82,7 +87,9 @@ export default function About() {
         "ashley", "emily", "lisa", "anna", "nicole", "luna", "victoria", "siri", 
         "cortana", "alexa", "siri voice 2", "siri voice 4", "google us english 1", 
         "google us english 3", "google uk english 1", "google uk english 3", 
-        "google en-in 1", "google en-in 3"
+        "google en-in 1", "google en-in 3", "google us english",
+        // Google TTS Android female voice sub-tags
+        "sfg", "dfz", "srg", "sif", "iol"
       ];
       for (const fName of femaleNames) {
         if (name.includes(fName)) {
@@ -121,17 +128,17 @@ export default function About() {
     {
       num: "01",
       title: "Introduction",
-      text: "I am a Computer Science & Engineering student at Dr. N.G.P. Institute of Technology, Coimbatore. I am committed to developing innovative and efficient software solutions, eager to apply my diverse technical skill set to enhance productivity and growth.",
+      text: "I am a Computer Science & Engineering student at Dr. N.G.P. Institute of Technology, Coimbatore. Committed to developing innovative and efficient solutions that drive progress, I am eager to apply my diverse technical skillset in high-impact environments to enhance productivity and growth.",
     },
     {
       num: "02",
       title: "Areas of Interest",
-      text: "My primary interests lie in Full Stack Development (MERN), Software Development & Application Design, Machine Learning, Computer Vision, and Data Structures & Algorithms.",
+      text: "My primary areas of interest include Full Stack Development (MERN), Software Development & Application Design, Generative-AI, and Data Structures & Algorithms.",
     },
     {
       num: "03",
       title: "Current Focus",
-      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. Experienced in Python, Java, MongoDB, PostgreSQL, and LLM-based orchestration.",
+      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. My tech stack includes Java, Spring Boot, Python, MongoDB, PostgreSQL, LLM APIs, and REST APIs.",
     },
     {
       num: "04",
@@ -223,22 +230,23 @@ export default function About() {
               </div>
             </motion.div>
 
-            {/* Speaking subtitle bubble overlay */}
-            <AnimatePresence>
-              {isSpeaking && (
-                <motion.div
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute -bottom-16 left-4 right-4 bg-neutral-950/95 border border-accent/25 rounded-lg p-3 font-mono text-[9px] text-neutral-300 leading-relaxed text-left keep-dark select-none shadow-2xl z-20"
-                >
-                  <span className="text-accent animate-pulse mr-1">&gt; NITHEESH_VOICE:</span>
-                  "{getSubtitleText(speechTime)}"
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
+
+          {/* Speaking subtitle bubble (now in document flow to prevent overlaps) */}
+          <AnimatePresence>
+            {isSpeaking && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-[320px] md:max-w-[360px] mx-auto lg:mx-0 bg-neutral-950/95 border border-accent/25 rounded-lg p-3 font-mono text-[9px] text-neutral-300 leading-relaxed text-left keep-dark select-none shadow-2xl z-20"
+              >
+                <span className="text-accent animate-pulse mr-1">&gt; NITHEESH_VOICE:</span>
+                "{getSubtitleText(speechTime)}"
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right Column: Story items */}
