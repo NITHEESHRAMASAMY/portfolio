@@ -5,8 +5,8 @@ import { Terminal, Eye, Code, Cpu, Compass } from "lucide-react";
 export default function MissionVision() {
   const [mode, setMode] = useState("interface"); // 'interface' or 'schema'
 
-  const missionText = "To craft human-centered digital interfaces where calm design thinking meets flawless engineering execution, eliminating noise and elevating creative clarity.";
-  const visionText = "To be a Product Designer who transforms complex, fragmented systems into intuitive, beautiful workspaces that empower people to do their best work.";
+  const missionText = "To create products where thoughtful engineering meets purposeful innovation, delivering solutions that truly matter.";
+  const visionText = "To become a software engineer known not by the number of applications built, but by the meaningful impact those applications create.";
 
 
 

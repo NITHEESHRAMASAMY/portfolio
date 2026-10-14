@@ -59,7 +59,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   Nitheesh R
                 </h3>
                 <p className="text-[11px] text-neutral-400 font-mono hidden sm:block">
-                  UI/UX & Product Designer · Final-Year CSE
+                  Full Stack & Java Developer · Final-Year CSE
                 </p>
               </div>
             </div>
@@ -111,10 +111,10 @@ export default function ResumeModal({ isOpen, onClose }) {
                 </div>
                 <div>
                   <h4 className="text-xl font-display font-semibold mb-1">
-                    Nitheesh R — UI/UX & Product Design Resume
+                    Nitheesh R — Full Stack & Java Developer Resume
                   </h4>
                   <p className="text-sm text-neutral-400 max-w-md mx-auto">
-                    Featuring FixMate, FORMA, and Nexus product design case studies.
+                    Featuring Code Logic Validator, Techiegram, and AI system implementations.
                   </p>
                 </div>
                 <div className="flex items-center gap-3 pt-2">

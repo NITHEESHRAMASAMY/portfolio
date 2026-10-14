@@ -11,23 +11,23 @@ export default function About() {
   const stories = [
     {
       num: "01",
-      title: "Design & Product Vision",
-      text: "I am a Product Designer and Computer Science student at Dr. N.G.P. Institute of Technology, Coimbatore. I specialize in designing human-centered digital experiences, calm workspaces, and spatial interfaces that bridge complex system architectures with intuitive user interactions.",
+      title: "Introduction",
+      text: "I am a Computer Science & Engineering student at Dr. N.G.P. Institute of Technology, Coimbatore. Committed to developing innovative and efficient solutions that drive progress, I am eager to apply my diverse technical skillset in high-impact environments to enhance productivity and growth.",
     },
     {
       num: "02",
-      title: "Core UX Philosophy",
-      text: "My design approach centers on empathy-driven user research, rigorous information architecture, and scalable design systems. I believe good design doesn't shout—it quietly removes cognitive friction and empowers users to do their best work.",
+      title: "Areas of Interest",
+      text: "My primary areas of interest include Full Stack Development (MERN), Software Development & Application Design, Generative-AI, and Data Structures & Algorithms.",
     },
     {
       num: "03",
-      title: "The Design-to-Code Advantage",
-      text: "Combining deep UI/UX craft with a software engineering foundation, I bridge the gap between design vision and production execution. From Figma design tokens and wireframing to responsive React and micro-interactions, I ensure zero-loss design handoffs.",
+      title: "Current Focus",
+      text: "Currently building intelligent agent workflows, prompt engineering systems, and responsive web platforms. My tech stack includes Java, Spring Boot, Python, MongoDB, PostgreSQL, LLM APIs, and REST APIs.",
     },
     {
       num: "04",
-      title: "Certifications & Recognition",
-      text: "Certified in UI-UX Design and Fullstack Development by Maiyyam, recognized at Ideathons and design challenges, with hands-on case studies spanning digital studio operating systems and AR/VR discovery platforms.",
+      title: "Certifications",
+      text: "Certified in Fullstack Development by Maiyyam, recognized at the Coding Premier League (Kumaraguru) and Ideathon (Bannari Amman Institute), along with Learnathon 2023 and 2024 certificates.",
     },
   ];
 
@@ -222,7 +222,7 @@ export default function About() {
           "Creating intelligent solutions for a digital future"
         </h4>
         <p className="font-mono text-[9px] text-accent tracking-[0.25em] uppercase mt-4">
-          // NITHEESH DESIGN CREED
+          // NITHEESH ENGINEERING CREED
         </p>
       </motion.div>
 

@@ -94,9 +94,9 @@ export default function App() {
 
           {/* Below-the-fold content wrapped in Suspense for lazy load optimizations */}
           <Suspense fallback={<SectionFallback />}>
-            <Projects />
             <About />
             <MissionVision />
+            <Projects />
             <Skills />
             <Experience />
             <Education />

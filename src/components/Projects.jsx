@@ -1,321 +1,378 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowUpRight,
-  ExternalLink,
-  Layers,
-  FileText,
-  Sparkles,
-  Maximize2,
-  CheckCircle2,
-  ChevronRight,
-  Compass,
-} from "lucide-react";
-import { caseStudiesData } from "../data/caseStudiesData";
-import CaseStudyModal from "./CaseStudyModal";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 
-// Secondary Engineering projects data
-const engineeringProjects = [
+// Custom Github brand icon
+const Github = ({ size = 16, className }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    stroke="currentColor"
+    strokeWidth="2"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+const projectsData = [
   {
-    num: "04",
+    id: 1,
+    num: "01",
     name: "Code Logic Validator",
     tagline: "AI Orchestration Logic Evaluation Engine",
-    description:
-      "Educational AI agent evaluating problem-solving logic in plain text without revealing solutions. Spring Boot & LLM APIs.",
-    tech: ["Java", "Spring Boot", "LLM APIs", "MongoDB"],
+    description: "Building an AI-powered educational agent that evaluates a beginner's problem-solving logic written in plain text without revealing actual code solutions. Developing a Spring Boot-based backend integrated with LLM APIs to assess reasoning, generate targeted hints, and guide learners through structured problem-solving workflows. Exploring prompt engineering, AI orchestration, REST API design, and scalable educational technology solutions.",
+    tech: ["Java", "Spring Boot", "LLM APIs", "REST APIs", "MongoDB", "Prompt Engineering"],
     github: "https://github.com/NITHEESHRAMASAMY",
     live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "validator",
   },
   {
-    num: "05",
+    id: 2,
+    num: "02",
     name: "Techiegram",
     tagline: "Short Technical Video Reels Platform",
-    description:
-      "Web platform to share short technical video reels with categorization, likes, and responsive mobile-first UI.",
-    tech: ["React", "JavaScript", "REST APIs", "Tailwind"],
+    description: "Developing a web platform to share short technical video reels with features like user uploads, likes, and categorized content. Implementing frontend and backend functionalities to ensure smooth content delivery and user interaction.",
+    tech: ["HTML/CSS", "JavaScript", "Java", "REST APIs", "MongoDB"],
     github: "https://github.com/NITHEESHRAMASAMY",
     live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "techiegram",
   },
   {
-    num: "06",
+    id: 3,
+    num: "03",
     name: "Smart Leaf Scanner",
     tagline: "CNN Plant Disease Detection System",
-    description:
-      "Interactive CNN-based disease classifier achieving over 96% accuracy with sub-2s inference time.",
-    tech: ["Python", "TensorFlow", "OpenCV", "Streamlit"],
+    description: "Developed a CNN-based Smart Leaf Scanner to detect and classify plant diseases from leaf images with high accuracy. Built an interactive web interface reducing prediction time to under 2 seconds and achieving over 96% model accuracy.",
+    tech: ["Python", "CNN", "TensorFlow", "OpenCV", "Streamlit"],
     github: "https://github.com/NITHEESHRAMASAMY",
     live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "scanner",
+  },
+  {
+    id: 4,
+    num: "04",
+    name: "ContextKey-Logger",
+    tagline: "OS-Level Context-Aware Keystroke Analyzer",
+    description: "Developed a Python-based keylogging tool using pynput to capture user keystrokes along with active window titles for contextual tracking and analysis. Implemented OS-level window detection (Windows) using ctypes to log keystrokes with associated application/window names, saving data securely to a file.",
+    tech: ["Python", "Pynput", "ctypes", "Windows API"],
+    github: "https://github.com/NITHEESHRAMASAMY",
+    live: "https://github.com/NITHEESHRAMASAMY",
+    visual: "keylogger",
   },
 ];
 
 export default function Projects() {
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [activeHoverIdx, setActiveHoverIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const containerRef = useRef(null);
 
-  const openCaseStudy = (study) => {
-    setSelectedCaseStudy(study);
-    setModalOpen(true);
+  // 3D perspective mouse hover tracking
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    // Calculate relative mouse coordinates (-0.5 to 0.5)
+    const relX = (e.clientX - rect.left) / width - 0.5;
+    const relY = (e.clientY - rect.top) / height - 0.5;
+    
+    // Scale for gentle tilt intensity
+    setTilt({
+      x: relX * 20, // max 10 deg tilt
+      y: -relY * 20,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
   };
 
   return (
     <section
       id="projects"
-      className="min-h-screen py-28 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative blueprint-grid"
+      className="min-h-screen py-32 px-6 md:px-12 border-t border-neutral-900 bg-black flex flex-col justify-between relative blueprint-grid"
     >
-      {/* SECTION HEADER */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-        <div className="flex flex-col gap-2 max-w-2xl">
-          <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            [ PRIMARY FOCUS // UI & UX DESIGN ]
-          </span>
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold tracking-tight text-white uppercase leading-none">
-            CASE STUDIES
-          </h2>
-          <p className="text-neutral-400 font-sans text-sm md:text-base leading-relaxed mt-2">
-            Selected Product Design, Spatial UX, and Design System case studies. Click any project card to open and scroll through the full 8-page interactive case study deck.
-          </p>
-        </div>
-
-        {/* Quick Instructions badge */}
-        <div className="flex items-center gap-3 font-mono text-xs text-neutral-400 border border-neutral-800 bg-neutral-950/80 px-4 py-2.5 rounded-xl">
-          <Layers size={14} className="text-accent" />
-          <span>3 Complete Case Studies • 8-Page Interactive Decks</span>
-        </div>
+      <div className="flex flex-col gap-2 mb-16">
+        <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase">
+          [ SELECTED WORKS ]
+        </span>
+        <h2 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white uppercase leading-none">
+          PROJECT CASE STUDIES
+        </h2>
       </div>
 
-      {/* 3 PRIMARY UI/UX CASE STUDY CARDS */}
-      <div className="grid grid-cols-1 gap-12 w-full mb-24">
-        {caseStudiesData.map((project, idx) => {
-          const isForma = project.id === "forma";
-          const isNexus = project.id === "nexus";
-
-          return (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: idx * 0.15 }}
-              onClick={() => openCaseStudy(project)}
-              className="group relative cursor-pointer rounded-2xl border border-neutral-800 bg-gradient-to-b from-neutral-950/80 to-black hover:border-accent/40 transition-all duration-500 overflow-hidden shadow-2xl p-6 sm:p-8 md:p-12 hover:shadow-accent/5"
-            >
-              {/* Subtle accent hover highlight bar */}
+      {/* Main split grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start w-full">
+        {/* Left column: Projects table list */}
+        <div className="lg:col-span-7 flex flex-col">
+          {projectsData.map((project, idx) => {
+            const isActive = activeIdx === idx;
+            return (
               <div
-                className="absolute top-0 left-0 h-1 w-0 group-hover:w-full transition-all duration-700 ease-out"
-                style={{ backgroundColor: project.theme.accent }}
-              />
+                key={project.id}
+                onMouseEnter={() => setActiveIdx(idx)}
+                className="border-b border-neutral-900 py-8 first:border-t flex flex-col gap-4 relative group"
+              >
+                {/* Visual indicator slide overlay */}
+                <div className="absolute inset-0 bg-neutral-950/20 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out -z-10" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Left Column: Case Study Specs & Content */}
-                <div className="lg:col-span-7 flex flex-col gap-6">
-                  {/* Eyebrow & Number */}
-                  <div className="flex items-center gap-4">
-                    <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded bg-neutral-900 border border-neutral-800 text-accent">
-                      CASE STUDY {project.num}
+                <div className="flex justify-between items-start gap-4">
+                  {/* Number & Name block */}
+                  <div className="flex gap-6 items-start">
+                    <span className="font-mono text-xs text-neutral-600 pt-2">
+                      {project.num}
                     </span>
-                    <span className="font-mono text-xs text-neutral-500 tracking-wider uppercase">
-                      {project.category}
-                    </span>
-                    <span className="text-neutral-700 hidden sm:inline">•</span>
-                    <span className="font-mono text-xs text-neutral-500 hidden sm:inline">
-                      {project.timeline}
-                    </span>
+                    <div className="flex flex-col">
+                      <h3 className="text-2xl md:text-4xl font-display font-medium text-white transition-colors duration-300 group-hover:text-neutral-200">
+                        {project.name}
+                      </h3>
+                      <span className="font-mono text-xs text-neutral-500 tracking-wide mt-1">
+                        {project.tagline}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Title & Tagline */}
-                  <div>
-                    <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-white tracking-tight uppercase group-hover:text-accent transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    <p className="text-lg sm:text-xl font-display font-medium text-neutral-300 mt-1">
-                      {project.tagline}
-                    </p>
+                  {/* Desktop active caret or arrow */}
+                  <div className="hidden md:block">
+                    <motion.div
+                      animate={{
+                        x: isActive ? 4 : 0,
+                        opacity: isActive ? 1 : 0.2,
+                        scale: isActive ? 1.1 : 1,
+                      }}
+                      className="text-white"
+                    >
+                      <ArrowUpRight size={20} />
+                    </motion.div>
                   </div>
+                </div>
 
-                  {/* Summary */}
-                  <p className="text-neutral-400 font-sans text-sm sm:text-base leading-relaxed max-w-2xl">
-                    {project.summary}
+                {/* Details layout: reveals on hover, always open on mobile */}
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: isActive ? "auto" : "0px",
+                    opacity: isActive ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden md:pl-10 flex flex-col gap-5 pr-4"
+                >
+                  <p className="text-neutral-400 font-light text-sm leading-relaxed max-w-xl font-sans mt-2">
+                    {project.description}
                   </p>
 
-                  {/* Deliverables / UX Tags */}
+                  {/* Tech stack badges */}
                   <div className="flex flex-wrap gap-2">
-                    {project.deliverables.slice(0, 5).map((d) => (
+                    {project.tech.map((t) => (
                       <span
-                        key={d}
-                        className="font-mono text-[10px] tracking-wider text-neutral-300 border border-neutral-800/90 bg-neutral-900/60 px-2.5 py-1 rounded-md"
+                        key={t}
+                        className="font-mono text-[9px] tracking-wider text-neutral-400 border border-neutral-800 bg-neutral-950 px-2 py-1 rounded"
                       >
-                        {d}
+                        {t}
                       </span>
                     ))}
-                    <span className="font-mono text-[10px] text-accent border border-accent/20 bg-accent/5 px-2 py-1 rounded-md">
-                      +8 Pages
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex gap-4 font-mono text-[10px] tracking-widest text-neutral-400 mt-2">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 hover:text-white transition-colors"
+                    >
+                      <Github size={12} />
+                      <span>GITHUB</span>
+                    </a>
+                    <span>/</span>
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 hover:text-white transition-colors"
+                    >
+                      <ExternalLink size={12} />
+                      <span>LIVE DEMO</span>
+                    </a>
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right column: 3D perspective dashboard visualization preview (desktop only) */}
+        <div className="hidden lg:col-span-5 lg:flex flex-col justify-center items-center h-full sticky top-36">
+          <div
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="w-full aspect-square max-w-[420px] relative rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 transition-all duration-500 ease-out flex items-center justify-center cursor-none"
+            style={{
+              perspective: "1000px",
+            }}
+          >
+            <motion.div
+              animate={{
+                rotateY: tilt.x,
+                rotateX: tilt.y,
+              }}
+              transition={{ type: "spring", stiffness: 100, damping: 18 }}
+              className="w-full h-full bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden relative shadow-2xl shadow-black keep-dark"
+            >
+              {/* Dynamic visual previews based on active index */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIdx}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute inset-0 flex flex-col justify-between p-6 bg-black"
+                >
+                  {/* Top Bar decoration */}
+                  <div className="flex justify-between items-center border-b border-neutral-900 pb-4">
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-neutral-800" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-neutral-800" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-neutral-800" />
+                    </div>
+                    <span className="font-mono text-[9px] tracking-widest text-neutral-600 uppercase">
+                      Case Study {projectsData[activeIdx].num}
                     </span>
                   </div>
 
-                  {/* Bottom Strip: Stats & CTA Button */}
-                  <div className="pt-4 border-t border-neutral-900/80 flex flex-wrap items-center justify-between gap-4">
-                    {/* Stats pills */}
-                    <div className="flex items-center gap-6">
-                      {project.stats.slice(0, 2).map((s, sIdx) => (
-                        <div key={sIdx} className="flex flex-col">
-                          <span className="font-mono text-lg font-bold text-white">
-                            {s.val}
-                          </span>
-                          <span className="font-mono text-[10px] text-neutral-500 tracking-wider uppercase">
-                            {s.label}
-                          </span>
+                  {/* Mid visual content: custom vector drawings of dashboards/networks/code */}
+                  <div className="flex-1 flex items-center justify-center relative overflow-hidden py-4">
+                    {/* Visual 1: Code Logic Validator */}
+                    {activeIdx === 0 && (
+                      <div className="w-full flex flex-col gap-2.5 font-mono text-[8px] text-neutral-500">
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>AGENT LOGIC COGNITION</span>
+                          <span className="text-green-500 animate-pulse">ACTIVE</span>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex justify-between">
+                          <span>Prompt Orchestration:</span>
+                          <span className="text-white">SIH-Ed-System-v2</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Cognitive Parser:</span>
+                          <span className="text-neutral-300">LLM_API_ROUTING</span>
+                        </div>
+                        <div className="p-2.5 border border-neutral-900 bg-neutral-950 rounded text-neutral-400 text-[7px] leading-normal">
+                          <p className="text-green-400 font-bold">// USER INPUT SENTENCE:</p>
+                          <p>"I want to find prime numbers using a sieve."</p>
+                          <p className="text-white mt-1">// TARGETED AGENT HINT GENERATED:</p>
+                          <p>"Try initializing a boolean array of size N..."</p>
+                        </div>
+                      </div>
+                    )}
 
-                    {/* Click CTA button */}
-                    <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-white text-black font-mono text-xs font-semibold group-hover:bg-accent group-hover:text-black transition-all duration-300 shadow-md">
-                      <span>OPEN FULL CASE STUDY</span>
-                      <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </div>
+                    {/* Visual 2: Techiegram */}
+                    {activeIdx === 1 && (
+                      <div className="w-full h-full flex items-center justify-center relative p-2">
+                        <div className="w-[120px] h-full border border-neutral-800 rounded-xl relative bg-neutral-950 p-2 flex flex-col justify-between">
+                          <div className="flex justify-between items-center text-[7px] border-b border-neutral-900 pb-1">
+                            <span className="text-white font-bold">Techiegram App</span>
+                            <span className="text-neutral-500">1080p</span>
+                          </div>
+                          <div className="flex-1 flex items-center justify-center my-2 border border-dashed border-neutral-900 rounded relative overflow-hidden bg-neutral-900">
+                            {/* Reel icon vector placeholder */}
+                            <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+                            <div className="absolute bottom-1 right-1 font-mono text-[6px] text-neutral-500">
+                              PLAY_DRAFT
+                            </div>
+                          </div>
+                          <div className="flex justify-between text-[6px] text-neutral-400">
+                            <span>Likes: 12.4k</span>
+                            <span>MDB Status: UP</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Visual 3: Smart Leaf Scanner */}
+                    {activeIdx === 2 && (
+                      <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500">
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>CNN IMAGERY PROCESSOR</span>
+                          <span className="text-white">SCANNING</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Classification Model:</span>
+                          <span className="text-white">TensorFlow // CNN</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Resolution:</span>
+                          <span className="text-neutral-400">224 x 224 x 3</span>
+                        </div>
+                        <div className="pl-3 border-l border-neutral-800 flex flex-col gap-1 mt-1 text-[7px]">
+                          <div className="flex justify-between">
+                            <span>Target Leaf Status:</span>
+                            <span className="text-green-500 font-bold">96.8% Rust Detected</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Streamlit View:</span>
+                            <span className="text-white">RENDERED</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Visual 4: ContextKey-Logger */}
+                    {activeIdx === 3 && (
+                      <div className="w-full flex flex-col gap-2 font-mono text-[8px] text-neutral-500 keep-dark">
+                        <div className="flex justify-between text-[10px] text-neutral-400 font-bold border-b border-neutral-900 pb-1">
+                          <span>WINDOWS KERNEL AUDIT</span>
+                          <span className="text-red-500">LOGGING</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Active Window Hook:</span>
+                          <span className="text-white">chrome.exe</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Buffer Registry:</span>
+                          <span className="text-neutral-400">ctypes.wintypes</span>
+                        </div>
+                        <div className="p-2 border border-neutral-900 bg-neutral-950 rounded text-neutral-400 text-[6px] font-mono leading-tight max-h-[60px] overflow-hidden">
+                          <p>[22:42:01] Hook Focus: vscode.exe</p>
+                          <p>[22:42:04] Keys: import sys\n</p>
+                          <p>[22:42:09] Hook Focus: chrome.exe</p>
+                          <p>[22:42:15] Keys: github.com</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
 
-                {/* Right Column: Interactive Editorial Preview Box */}
-                <div className="lg:col-span-5 flex justify-center">
-                  <div
-                    className="w-full aspect-[4/3] max-w-md rounded-xl p-5 border flex flex-col justify-between transition-all duration-500 group-hover:scale-[1.02] shadow-xl relative overflow-hidden"
-                    style={{
-                      backgroundColor: project.theme.bg,
-                      color: project.theme.text,
-                      borderColor: project.theme.border,
-                    }}
-                  >
-                    {/* Preview Top Header */}
-                    <div className="flex justify-between items-center text-[10px] font-mono border-b pb-2" style={{ borderColor: project.theme.border }}>
-                      <span className="font-bold uppercase tracking-wider">
-                        {project.pages[0].section}
-                      </span>
-                      <span>01 / 08</span>
+                  {/* Bottom title info */}
+                  <div className="border-t border-neutral-900 pt-4 flex justify-between items-end">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-mono text-[8px] text-accent uppercase">[PREVIEW SPEC]</span>
+                      <h4 className="text-sm font-display text-white font-semibold uppercase tracking-wider group-hover:text-accent transition-colors duration-300">
+                        {projectsData[activeIdx].name}
+                      </h4>
                     </div>
-
-                    {/* Inner Mockup View */}
-                    <div className="my-auto py-2">
-                      <div className="text-[10px] font-mono uppercase tracking-widest opacity-70 mb-1">
-                        {project.category}
-                      </div>
-                      <div className="text-3xl font-display font-bold uppercase leading-none mb-1">
-                        {project.title}
-                      </div>
-                      <div className="text-xs font-sans font-medium line-clamp-2 opacity-85">
-                        {project.tagline}
-                      </div>
-
-                      {/* Mini preview card */}
-                      <div
-                        className="mt-4 p-3 rounded-lg border shadow-sm text-left"
-                        style={{
-                          backgroundColor: project.theme.cardBg,
-                          borderColor: project.theme.border,
-                        }}
-                      >
-                        <div className="text-[9px] font-mono opacity-60 uppercase">
-                          {isForma ? "WORKSPACE STATUS" : isNexus ? "FEATURED WORLD" : "SYSTEM TOKENS"}
-                        </div>
-                        <div className="text-sm font-display font-semibold">
-                          {isForma ? "Good morning, Alex." : isNexus ? "Orbit Racers (Season 04)" : "12 Token Libraries"}
-                        </div>
-                        <div className="flex gap-2 mt-2">
-                          {project.palette.slice(0, 4).map((c, cIdx) => (
-                            <span
-                              key={cIdx}
-                              className="w-4 h-4 rounded-full border border-black/10 inline-block shadow-xs"
-                              style={{ backgroundColor: c.hex }}
-                              title={c.name}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Preview Footer */}
-                    <div className="flex justify-between items-center text-[9px] font-mono pt-2 border-t" style={{ borderColor: project.theme.border }}>
-                      <span className="opacity-70">SCROLL TO EXPLORE ALL 8 PAGES</span>
-                      <span className="font-bold">INTERACTIVE DECK ↗</span>
-                    </div>
+                    <ArrowUpRight size={14} className="text-accent" />
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </motion.div>
-          );
-        })}
-      </div>
-
-      {/* SECONDARY SECTION: TECHNICAL & FULL-STACK IMPLEMENTATION */}
-      <div className="border-t border-neutral-900 pt-16">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div>
-            <span className="font-mono text-xs text-neutral-500 tracking-[0.25em] uppercase">
-              [ CODE & SYSTEMS ]
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-display font-semibold text-white uppercase mt-1">
-              Engineering & Prototypes
-            </h3>
           </div>
-          <p className="font-mono text-xs text-neutral-400">
-            Design-to-code execution across Java, Python, and React
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {engineeringProjects.map((p) => (
-            <div
-              key={p.num}
-              className="p-6 rounded-xl border border-neutral-900 bg-neutral-950/40 hover:border-neutral-800 flex flex-col justify-between transition-colors group"
-            >
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="font-mono text-xs text-neutral-600">
-                    {p.num}
-                  </span>
-                  <a
-                    href={p.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-white transition"
-                  >
-                    <ArrowUpRight size={16} />
-                  </a>
-                </div>
-                <h4 className="font-display font-medium text-lg text-white mb-1 group-hover:text-accent transition-colors">
-                  {p.name}
-                </h4>
-                <p className="font-mono text-[11px] text-neutral-500 mb-3">
-                  {p.tagline}
-                </p>
-                <p className="text-neutral-400 text-xs leading-relaxed font-sans mb-4">
-                  {p.description}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-3 border-t border-neutral-900">
-                {p.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="font-mono text-[9px] text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* FULL CASE STUDY MODAL */}
-      <CaseStudyModal
-        project={selectedCaseStudy}
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      {/* Footer copyright */}
+      <div className="flex justify-between items-center font-mono text-[9px] text-neutral-600 tracking-[0.2em] mt-24">
+        <span>[SPEC] PROJECTS // WORKS LAB</span>
+        <span>026 // © NITHEESH R</span>
+      </div>
     </section>
   );
 }

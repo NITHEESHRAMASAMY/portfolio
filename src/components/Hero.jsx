@@ -3,12 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { ArrowUpRight } from "lucide-react";
 import HeroBackground from "./HeroBackground";
 
-const roles = [
-  "UI/UX DESIGNER",
-  "PRODUCT DESIGNER",
-  "DESIGN SYSTEMS ARCHITECT",
-  "INTERACTION DESIGNER",
-];
+const roles = ["FULL STACK DEVELOPER", "JAVA & PYTHON DEVELOPER", "AI WORKFLOW ENGINEER"];
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -97,9 +92,9 @@ export default function Hero() {
         <div className="overflow-hidden mb-2">
           <motion.p
             variants={itemVariants}
-            className="font-mono text-xs md:text-sm tracking-[0.3em] text-accent uppercase"
+            className="font-mono text-xs md:text-sm tracking-[0.3em] text-neutral-500 uppercase"
           >
-            PRODUCT DESIGNER · UI/UX & INTERACTION DESIGN
+            B.E. Computer Science & Engineering Student
           </motion.p>
         </div>
 
@@ -132,9 +127,9 @@ export default function Hero() {
         {/* Subtitle */}
         <motion.p
           variants={subtitleVariants}
-          className="text-neutral-400 text-sm md:text-lg font-light tracking-wide max-w-2xl mb-12 font-sans leading-relaxed"
+          className="text-neutral-400 text-sm md:text-xl font-light tracking-wide max-w-xl mb-12 font-sans"
         >
-          Designing calm digital workspaces, spatial AR/VR discovery platforms, and human-centered design systems that turn complex workflows into intuitive experiences.
+          Code. Create. Innovate. Repeat.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -142,26 +137,24 @@ export default function Hero() {
           variants={buttonVariants}
           className="flex flex-col sm:flex-row gap-5 items-center justify-center font-mono text-xs tracking-widest"
         >
-          {/* Explore Case Studies Button (Primary CTA) */}
+          {/* Download Resume Button (Contrast Fill) */}
           <a
-            href="#projects"
-            className="group flex items-center gap-2 bg-accent text-black hover:bg-transparent hover:text-accent border border-accent px-8 py-4 rounded-full transition-all duration-300 font-semibold shadow-lg shadow-accent/10"
-          >
-            <span>VIEW UI/UX CASE STUDIES</span>
-            <span className="w-1.5 h-1.5 bg-black rounded-full group-hover:bg-accent group-hover:scale-150 transition-all duration-300" />
-          </a>
-
-          {/* Download Resume Button */}
-          <a
-            href="/resume.pdf?v=2"
-            download="Nitheesh_R_Resume.pdf"
+            href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex items-center gap-2 border border-neutral-800 hover:border-accent hover:text-accent px-8 py-4 rounded-full transition-all duration-300 overflow-hidden bg-neutral-950/60 cursor-pointer"
-            title="Download Updated Resume"
+            className="group relative flex items-center gap-2 border border-accent/20 hover:border-accent hover:text-accent px-8 py-4 rounded-full transition-all duration-300 overflow-hidden bg-neutral-950/40"
           >
             <span>DOWNLOAD RESUME</span>
-            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300 text-neutral-400 group-hover:text-accent" />
+            <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300 text-accent" />
+          </a>
+
+          {/* Contact Me Button */}
+          <a
+            href="#contact"
+            className="group flex items-center gap-2 bg-accent text-black hover:bg-transparent hover:text-accent border border-accent px-8 py-4 rounded-full transition-all duration-300 font-medium"
+          >
+            <span>CONTACT ME</span>
+            <span className="w-1.5 h-1.5 bg-black rounded-full group-hover:bg-accent group-hover:scale-150 transition-all duration-300" />
           </a>
         </motion.div>
       </motion.div>
