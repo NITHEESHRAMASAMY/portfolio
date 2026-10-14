@@ -1,25 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
 const skillsList = [
-  "UI-UX Design",
-  "Product Design",
-  "Design Systems",
-  "Figma",
-  "Wireframing",
-  "User Research",
-  "Prototyping",
-  "User Flows",
-  "Design Tokens",
-  "Micro-Interactions",
-  "Accessibility",
-  "React & CSS",
-  "Tailwind",
-  "Motion Design",
-  "Creative Tech",
   "Java",
   "Python",
+  "MongoDB",
+  "PostgreSQL",
+  "HTML",
+  "CSS",
+  "JavaScript",
   "Prompt Eng",
-  "Empathy",
+  "REST APIs",
+  "Data Analysis",
+  "Cloud Dev",
+  "Git",
+  "GitHub",
+  "Vibe Coding",
+  "SDLC & Agile",
+  "Communication",
+  "Adaptability",
+  "Creativity",
 ];
 
 export default function Skills() {
@@ -390,26 +389,25 @@ export default function Skills() {
           </div>
 
           <p className="text-neutral-400 font-sans font-light text-sm leading-relaxed min-h-[80px]">
-            {hoveredSkill === "UI-UX Design" && "Human-centered design process, heuristic evaluations, user testing, responsive layouts, and cohesive brand systems."}
-            {hoveredSkill === "Product Design" && "End-to-end product thinking: balancing user friction, product metrics, information hierarchy, and engineering feasibility."}
-            {hoveredSkill === "Design Systems" && "Scalable token architecture, component libraries, atomic design principles, and multi-brand style guides."}
-            {hoveredSkill === "Figma" && "Mastery of auto-layout, variables, semantic tokens, component variants, interactive prototyping, and design specs."}
-            {hoveredSkill === "Wireframing" && "Rapid low-fidelity exploration, structural layout testing, visual hierarchy, and iterative UX problem-solving."}
-            {hoveredSkill === "User Research" && "User interviews, persona modeling, empathy maps, task completion testing, and quantitative usability tracking."}
-            {hoveredSkill === "Prototyping" && "High-fidelity micro-interaction prototyping with realistic transitions, feedback states, and user test flows."}
-            {hoveredSkill === "User Flows" && "Information architecture mapping, decision trees, orientation pathways, and edge-case state handling."}
-            {hoveredSkill === "Design Tokens" && "Semantic color ramps, typography scales, spacing units, and cross-platform token sync via JSON & CSS."}
-            {hoveredSkill === "Micro-Interactions" && "Subtle feedback states, hover kinematics, spring physics, and kinetic delight that enhances usability."}
-            {hoveredSkill === "Accessibility" && "WCAG 2.1 AA/AAA compliance, color contrast auditing, keyboard navigation, focus states, and screen-reader semantics."}
-            {hoveredSkill === "React & CSS" && "Translating high-fidelity Figma components into clean, responsive JSX with pixel-perfect accuracy."}
-            {hoveredSkill === "Tailwind" && "Utility-first design token orchestration, responsive breakpoints, custom theme configurations, and fluid layouts."}
-            {hoveredSkill === "Motion Design" && "Framer Motion choreographies, GSAP scroll triggers, SVG transitions, and layout morphing animations."}
-            {hoveredSkill === "Creative Tech" && "Bridging design and code to prototype impossible interfaces, WebGL/canvas canvases, and generative experiments."}
-            {hoveredSkill === "Java" && "Deep engineering foundation in core OOP principles, concurrency models, and scalable backend logic."}
-            {hoveredSkill === "Python" && "Rapid automation, data scripting, CNN models, and AI agent workflow integrations."}
-            {hoveredSkill === "Prompt Eng" && "LLM prompt architecture, contextual grounding, multi-modal workflows, and AI co-pilot integration."}
-            {hoveredSkill === "Empathy" && "Listening deeply to user pain points, designing for real humans, and building interfaces with calm consideration."}
-            {!hoveredSkill && "Move your cursor inside the interactive physics canvas and hover over any of the floating nodes to inspect the design competence details."}
+            {hoveredSkill === "Java" && "Deep understanding of core OOP principles, concurrency frameworks, collections structure, and database mappings."}
+            {hoveredSkill === "Python" && "Experienced in data structures scripting, CNN classification architectures, and LLM automation tools."}
+            {hoveredSkill === "MongoDB" && "Document indexing pipelines, schema designs, transactional structures, and query aggregates."}
+            {hoveredSkill === "PostgreSQL" && "Relational database normalization, ACID consistency guarantees, indexing, and complex queries."}
+            {hoveredSkill === "HTML" && "Semantic markup structure, layout accessibility standards, DOM structures, and element hierarchies."}
+            {hoveredSkill === "CSS" && "Flexbox layouts, CSS grids, responsive media queries, and keyframe transition animations."}
+            {hoveredSkill === "JavaScript" && "Asynchronous programming models, lexical scopes, ES6 features, and event loop handling."}
+            {hoveredSkill === "Prompt Eng" && "LLM prompt design orchestration, autonomous agent chains, model behavior tuning, and tool integration."}
+            {hoveredSkill === "REST APIs" && "RESTful route routing structures, request validation logic, HTTP statuses, and JSON data formats."}
+            {hoveredSkill === "Data Analysis" && "Analyzing patterns, statistics computation, dataset extraction, and tabular data presentations."}
+            {hoveredSkill === "Cloud Dev" && "Understanding basic cloud infrastructure, serverless functions, deployment networks, and CI/CD pipelines."}
+            {hoveredSkill === "Git" && "Branch rebases, stash protocols, history commits, remote pulls, and merge conflict resolution."}
+            {hoveredSkill === "GitHub" && "CI/CD action runners, pull request reviews, repository hooks, and collaborative documentation."}
+            {hoveredSkill === "Vibe Coding" && "Fast-prototyping, rapid exploration of features, and AI-assisted pair programming workflows."}
+            {hoveredSkill === "SDLC & Agile" && "Familiar with Scrum methodology, Sprint planning, software engineering phases, and iterative development cycles."}
+            {hoveredSkill === "Communication" && "Active listener and clear communicator, converting complex developer logic into easy-to-understand design paradigms."}
+            {hoveredSkill === "Adaptability" && "Quick to learn new programming frameworks, responsive to changing constraints, and open to continuous feedback."}
+            {hoveredSkill === "Creativity" && "Innovative problem-solver, exploring artistic user interfaces, micro-interactions, and novel design choices."}
+            {!hoveredSkill && "Move your cursor inside the physics canvas sandbox and hover over any of the floating nodes to inspect the competence details."}
           </p>
 
           <div className="border-t border-neutral-900 pt-4 font-mono text-[9px] text-neutral-600 tracking-wider">
